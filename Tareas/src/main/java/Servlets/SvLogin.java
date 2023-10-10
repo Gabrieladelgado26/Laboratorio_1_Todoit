@@ -1,3 +1,4 @@
+
 package Servlets;
 
 import com.mycompany.mundo.Archivos;
@@ -5,17 +6,15 @@ import com.mycompany.mundo.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "SvUsuario", urlPatterns = {"/SvUsuario"})
-public class SvUsuario extends HttpServlet {
+@WebServlet(name = "SvLogin", urlPatterns = {"/SvLogin"})
+public class SvLogin extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,10 +33,10 @@ public class SvUsuario extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SvUsuario</title>");
+            out.println("<title>Servlet SvLogin</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SvUsuario at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SvLogin at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,6 +54,7 @@ public class SvUsuario extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
@@ -67,52 +67,23 @@ public class SvUsuario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Obtener la sesión actual
-        HttpSession session = request.getSession();
-
-        // Obtener el contexto del servlet
-        ServletContext context = getServletContext();
-
-        ArrayList<Usuario> misUsuarios = new ArrayList<>();
-
-        // Leer usuarios existentes desde el archivo
-        Archivos.leerArchivo(misUsuarios, context);
-
-        // Obtener datos del formulario enviados por POST
-        String cedula = request.getParameter("cedula");
-        String nombre = request.getParameter("nombre");
-        String contrasenia = request.getParameter("contrasenia");
-
-        // Verificar si la cédula ya existe
-        boolean cedulaExistente = false;
         
-        for (Usuario existingUsuario : misUsuarios) {
-            if (existingUsuario.getCedula() == Integer.parseInt(cedula)) {
-                cedulaExistente = true;
-                break;
-            }
+        int cedula = Integer.parseInt(request.getParameter("cedula"));
+        String contrasenia=request.getParameter("contrasenia");
+        
+        ServletContext context=getServletContext();
+       
+        Usuario user = verificarUsuario(cedula,contrasenia, context);
+        
+        if (user != null)
+        {
+            request.setAttribute("cedula", user.getCedula());
+            request.setAttribute("nombre", user.getNombre());
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else
+        {
+            request.getRequestDispatcher("index.jsp?noExistente="+"false").forward(request, response);
         }
-
-        if (!cedulaExistente) {
-            // Si la cédula no existe, agregamos el nuevo usuario
-            Usuario usuario = new Usuario(Integer.parseInt(cedula), nombre, contrasenia);
-            misUsuarios.add(usuario);
-
-            // Escribir la lista actualizada en el archivo
-            Archivos.escribirArchivo(misUsuarios, context);
-
-            String existente = "verdadero";
-            request.setAttribute("existente", existente);
-            
-        } else {
-            // La cédula ya existe
-            String existente = "falso";
-            request.setAttribute("existente", existente);
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
-        dispatcher.forward(request, response);
     }
 
     /**
@@ -124,5 +95,18 @@ public class SvUsuario extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public static Usuario verificarUsuario(int cedulaV, String contraseñaV, ServletContext context) throws IOException{
+        ArrayList<Usuario> misUsuarios = new ArrayList<>();
+
+        Archivos.leerArchivo(misUsuarios, context);
+        
+        for (Usuario u: misUsuarios){
+            if (u.getCedula()==cedulaV && u.getContrasenia().equals(contraseñaV)){
+                return u;
+            }
+        }
+        return null;
+    }
 
 }
