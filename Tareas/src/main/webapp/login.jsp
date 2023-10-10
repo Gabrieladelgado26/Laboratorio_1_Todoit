@@ -133,9 +133,12 @@
                             </tbody>
                         </table> <!-- Cierre de la etiqueta table-->
                     </div> <!-- Cierre de la clase card card-body -->
+                    
+                    <!-- Botón que redirige a la página index.jsp para cerrar sesión -->
                     <br><div class="align text-center">
                         <a href="index.jsp" class="btn btn-outline-success"> Cerrar sesion</a>
                     </div>
+                    
                 </div> <!-- Cierre de la clase col-lg-8 col-md-8 -->
             </div> <!-- Cierre de la clase row -->
         </div> <!-- Cierre de la clase container p-4 -->

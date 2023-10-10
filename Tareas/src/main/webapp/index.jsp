@@ -14,27 +14,32 @@
                                 <h2 class="heading-section">Sistema de Gestión</h2>
                                 <h2 class="heading-section">de Tareas</h2>
                             </div><br>
+                            <!-- Acción que conecta con el servlet llamado SvLogin por metodo POST -->
                             <form action="SvLogin" method="POST" class="signin-form">
+                                <!-- Input para ingresar cédula de usuario -->
                                 <div class="form-group">
-                                    <input id="cedula" name="cedula" type="text" class="form-control space-narrow" placeholder="Número de cédula" required>
+                                    <input id="cedula" name="cedula" type="text" class="form-control space-narrow" placeholder="Número de cédula" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
                                 </div>
+                                <!-- Input para ingresar contraseña de usuario -->
                                 <div class="form-group">
                                     <input id="contrasenia" name="contrasenia" type="password" class="form-control space-narrow" placeholder="Contraseña" required>
                                 </div>
+                                <!-- Botón para iniciar sesión -->
                                 <br><div class="form-group text-center">
                                     <button type="submit" class="btn btn-primary px-3 space-btn-narrow">Ingresar</button>
                                 </div>
                                 <br><p class="w-100 text-center">&mdash; ¿Aún no tienes una cuenta? &mdash;</p>
                                 <div class="social d-flex justify-content-center">
+                                    <!-- Link con estilo de botón para registrar un nuevo usuario -->
                                     <a href="#" class="py-2 ml-md-1 rounded btn-narrow" data-bs-toggle="modal" data-bs-target="#registrarUsuario">Registrate aquí</a>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                            </form> <!-- Cierre de la etiqueta form -->
+                        </div> <!-- Cierre de la etiqueta div que contiene la clase content-box -->
+                    </div> <!-- Cierre de la etiqueta div que contiene la clase login-wrap p-4 --> 
+                </div> <!-- Cierre de la etiqueta div que contiene la clase col-md-9 col-lg-7 -->
+            </div> <!-- Cierre de la etiqueta div que contiene la clase row -->
+        </div> <!-- Cierre de la etiqueta div que contiene la clase container -->
+    </section> <!-- Cierre de la etiqueta section -->
 
     <!---------------------------------------- Verificación de usuario -------------------------------------------->
     <%
@@ -84,7 +89,7 @@
     <!-- Modal que se muestra si el usario desea registrarse -->
 
     <div class="modal fade" id="registrarUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <!-- form que conecta con el servlet llamado SvUsuario por el metodo POST -->
+        <!-- Acción que conecta con el servlet llamado SvUsuario por metodo POST -->
         <form action="SvUsuario" method="POST">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -94,17 +99,17 @@
                     <div class="modal-body" style="z-index: 1050;">
 
                         <div class="form-outline mb-4">
-                            <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.3); color: black;" />
+                            <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.3); color: black;" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
                             <label class="form-label" for="cedula">Número de cédula</label>
                         </div>
 
                         <div class="form-outline mb-4">
-                            <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" />
+                            <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
                             <label class="form-label" for="nombre">Nombre</label>
                         </div>
 
                         <div class="form-outline mb-4";">
-                            <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);"/>
+                            <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
                             <label class="form-label" for="contrasenia">Contraseña</label>
                         </div>
                     </div>

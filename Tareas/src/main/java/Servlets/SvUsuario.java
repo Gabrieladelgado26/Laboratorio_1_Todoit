@@ -55,62 +55,68 @@ public class SvUsuario extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**
-     * 
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException 
+     * Este método se llama cuando se recibe una solicitud POST de un usuario para registrarse
+     *
+     * @param request El objeto HttpServletRequest que contiene la solicitud HTTP
+     * @param response El objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP
+     * @throws ServletException Excepción que se lanza si hay un error en el servlet
+     * @throws IOException Excepción que se lanza si hay un error de entrada o de salida
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Obtener la sesión actual
+        // Obtiene la sesión actual del usuario
         HttpSession session = request.getSession();
 
-        // Obtener el contexto del servlet
+        // Obtiene el contexto del servlet
         ServletContext context = getServletContext();
 
+        // Crea una lista para almacenar objetos de tipo Usuario
         ArrayList<Usuario> misUsuarios = new ArrayList<>();
 
-        // Leer usuarios existentes desde el archivo
+        // Lee la lista de usuarios existentes desde un archivo utilizando una función llamada leerArchivo
         Archivos.leerArchivo(misUsuarios, context);
 
-        // Obtener datos del formulario enviados por POST
+        // Obtiene los datos del formulario enviados por POST
         String cedula = request.getParameter("cedula");
         String nombre = request.getParameter("nombre");
         String contrasenia = request.getParameter("contrasenia");
 
-        // Verificar si la cédula ya existe
+        // Verificar si la cédula ya existe en la lista de usuarios
         boolean cedulaExistente = false;
-        
-        for (Usuario existingUsuario : misUsuarios) {
-            if (existingUsuario.getCedula() == Integer.parseInt(cedula)) {
+
+        // Ciclo for que recorre el ArrayList para verificar si la cédula a registrar ya se encuentra registrada
+        for (Usuario existeUsuario : misUsuarios) {
+            if (existeUsuario.getCedula() == Integer.parseInt(cedula)) {
                 cedulaExistente = true;
                 break;
             }
         }
 
         if (!cedulaExistente) {
-            // Si la cédula no existe, agregamos el nuevo usuario
+            // Si la cédula no existe se agrega un nuevo usuario a la lista
             Usuario usuario = new Usuario(Integer.parseInt(cedula), nombre, contrasenia);
             misUsuarios.add(usuario);
 
-            // Escribir la lista actualizada en el archivo
+            // Escribe la lista actualizada de usuarios en un archivo utilizando una función llamada escribirArchivo
             Archivos.escribirArchivo(misUsuarios, context);
 
+            // Establecer un atributo en la solicitud para indicar que el usuario fue agregado correctamente
             String existente = "verdadero";
             request.setAttribute("existente", existente);
-            
+
         } else {
-            // La cédula ya existe
+            // La cédula ya existe en la lista de usuarios
             String existente = "falso";
             request.setAttribute("existente", existente);
         }
 
+        // Redirigir la solicitud a la página "index.jsp"
         RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
         dispatcher.forward(request, response);
     }
