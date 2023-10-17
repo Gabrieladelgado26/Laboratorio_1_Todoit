@@ -1,88 +1,100 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%@page import="com.mycompany.mundo.Archivos"%>
 <%@page import="com.mycompany.mundo.Usuario"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://kit.fontawesome.com/424ce1386e.js" crossorigin="anonymous"></script>
-        <script src="scripts/script.js" type="text/javascript"></script>   
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <title>Gesti贸n de tareas</title>
-    </head>
-    <body>
-        <!-- Clase contenedora -->
-        <div class="container p-4">
-            <div class="row">
-                <img src="./images/front.jpg" alt=""> <!-- Imagen en la parte superior de la p谩gina web -->
-                <!-- Navbar -->
-                <nav class="navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 20px;">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#"></a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="index.jsp"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" style="margin-right: 30px;" href="#">Inicio</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Opciones
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Opci贸n 1</a></li>
-                                        <li><a class="dropdown-item" href="#">Opci贸n 2</a></li>
-                                        <li><a class="dropdown-item" href="#">Opci贸n 3</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <form class="d-flex" role="search" enctype="multipart/form-data">
-                                <input class="form-control me-2" type="search" id="inputNombre" placeholder="Busqueda" aria-label="Search">
-                                <button href="#" type="button" class="btn btn-outline-success" >Buscar</button>
-                            </form>
-                        </div>
+<%@page import="com.mycompany.mundo.ListasEnlazadas"%>
+
+<!-- Incluci髇 de la plantilla de header -->
+<%@include file= "templates/header.jsp" %>
+
+<body class="img js-fullheight" style="background-image: url(images/back.jpg);">
+    <!-- Clase contenedora -->
+    <div class="container p-4">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 20px;">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Gesti髇 de tareas</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="index.jsp"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" style="margin-right: 30px;" href="#">Inicio</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Opciones
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Opci髇 1</a></li>
+                                    <li><a class="dropdown-item" href="#">Opci髇 2</a></li>
+                                    <li><a class="dropdown-item" href="#">Opci髇 3</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="d-flex" role="search" enctype="multipart/form-data">
+                            <input class="form-control me-2" type="search" id="inputNombre" placeholder="Busqueda" aria-label="Search">
+                            <button href="#" type="button" class="btn btn-outline-success" >Buscar</button>
+                        </form>
                     </div>
-                </nav><!-- Cierre de etiqueta nav -->
+                    <!-- Navbar-->
+                    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                <center>
+                                    <img src="./images/iconoUsuario.png" alt="" width="150px" height="150px" style="display: block; margin: 0 auto;">
+                                </center>
+                        </li>
+                        <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getAttribute("nombre"));%></a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a style="text-align: left;" class="dropdown-item left-align" href="index.jsp">Cerrar sesi髇</a></li>
+                    </ul>
+                    </li>
+                    </ul>
+                </div>
+            </nav><!-- Cierre de etiqueta nav -->
 
-                <!-- Mensaje de bienvenida con el nombre del usuario que inicio sesi贸n -->
-                <div class="align text-center">
-                    <h3>Bienvenid@ <%out.println(request.getAttribute("nombre"));%></h3>
-                </div><br>
+            <!-- Mensaje de bienvenida -->
+            <div class="card card-body" align-items: center;>
+                <div>
+                    <h3 align="center" class="color-txt">Bienvenid@ al sistema de Gesti髇 de Tareas</h3>
+                    <h4 align="center"><%out.println(request.getAttribute("nombre"));%></h4>
+                </div>
+            </div>
+            <hr>
 
-                <!-- Columna izquierda para el formulario -->
-                <br><div class="col-lg-4 col-md-4"> <!-- Clase de divisi贸n en cuatro columnas -->
-                    <div class="card card-body"> <!-- Tarjeta de trabajo -->
-                        <h3>Agregar tarea</h3><br> <!-- Titulo del formulario para agregar una tarea -->
-
+            <!-- Columna izquierda para el formulario -->
+            <br><div class="col-lg-4 col-md-4"> <!-- Clase de divisi髇 en cuatro columnas -->
+                <div class="card card-body"> <!-- Tarjeta de trabajo -->
+                    <h3>Agregar tarea</h3><br><hr><br> <!-- Titulo del formulario para agregar una tarea -->
+                    <form action="SvTareas" method="POST">
                         <!-- Formulario que recibe todos los datos para agregar una tarea -->
                         <div class="col-auto">
                             <label class="visually-hidden">Id</label>
                             <div class="input-group">
                                 <div class="input-group-text">Id</div>
-                                <input type="text" class="form-control" required>
+                                <input id="id" name="id" type="text" class="form-control" required>
                             </div>
                         </div>
 
                         <br><div class="col-auto">
-                            <label class="visually-hidden">T铆tulo</label>
+                            <label class="visually-hidden">T韙ulo</label>
                             <div class="input-group">
-                                <div class="input-group-text">T铆tulo</div>
-                                <input type="text" class="form-control" required>
+                                <div class="input-group-text">T韙ulo</div>
+                                <input id="titulo" name="titulo" type="text" class="form-control" required>
                             </div>
                         </div>
 
                         <br><div class="col-auto">
-                            <label class="visually-hidden">Descripci贸n</label>
+                            <label class="visually-hidden">Descripci髇</label>
                             <div class="input-group">
-                                <div class="input-group-text">Descripci贸n</div>
-                                <textarea type="text" class="form-control" required></textarea>
+                                <div class="input-group-text">Descripci髇</div>
+                                <textarea id="descripcion" name="descripcion" type="text" class="form-control" required></textarea>
                             </div>
                         </div>
 
@@ -90,58 +102,74 @@
                             <label class="visually-hidden">Fecha</label>
                             <div class="input-group">
                                 <div class="input-group-text">Fecha</div>
-                                <input type="date" class="form-control" required>
+                                <input id="fecha" name="fecha" type="date" class="form-control" required>
                             </div>
                         </div>
-                        <!-- Bot贸n de tipo submit que permite agregar una tarea -->
-                        <br><button type="submit" class="btn btn-success"">Agregar tarea</button>
+                        <input type="hidden" id="cedula" name="cedula" type="text" value="<%out.println(request.getAttribute("cedula"));%>">
+                        <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
+                        <!-- Bot髇 de tipo submit que permite agregar una tarea -->
+                        <br><br><button type="submit" class="btn btn-success"">Agregar tarea</button>
                         <br>
-                    </div> <!-- Cierre de la clase card card-body -->
-                </div> <!-- Cierre de la clase col-lg-4 col-md-4 -->
+                    </form>
+                </div> <!-- Cierre de la clase card card-body -->
+            </div> <!-- Cierre de la clase col-lg-4 col-md-4 -->
 
-                <!-- Columna del lado derecho para la tabla de datos -->
-                <div class="col-lg-8 col-md-8">
-                    <div class="card card-body"> <!-- Tarjeta de trabajo -->
-                        <table class="table table-dark table-striped"> <!-- Estilo de la tabla de datos -->
-                            <thead>
-                                <tr>
-                                    <!-- Titulos de la tabla de datos -->
-                                    <th>Id</th>
-                                    <th>T铆tulo</th>
-                                    <th>Descripci贸n</th>
-                                    <th>Fecha</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>       
-                                <tr>
-                                    <!-- Muestra los datos ingresados en la tabla -->
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <!-- Iconos de acciones -->
-                                    <td>
-                                        <a href="#" class="btn btn-outline-success">
-                                            <i class="fas fa-pencil-alt"></i> 
-                                        </a>
-                                        <a href="#" class="btn btn-outline-danger">
-                                            <i class="fas fa-trash"></i> 
-                                        </a>
-                                    </td>          
-                                </tr>
-                            </tbody>
-                        </table> <!-- Cierre de la etiqueta table-->
-                    </div> <!-- Cierre de la clase card card-body -->
-                    
-                    <!-- Bot贸n que redirige a la p谩gina index.jsp para cerrar sesi贸n -->
-                    <br><div class="align text-center">
-                        <a href="index.jsp" class="btn btn-outline-success"> Cerrar sesion</a>
-                    </div>
-                    
-                </div> <!-- Cierre de la clase col-lg-8 col-md-8 -->
-            </div> <!-- Cierre de la clase row -->
-        </div> <!-- Cierre de la clase container p-4 -->
+            <!-- Columna del lado derecho para la tabla de datos -->
+            <div class="col-lg-8 col-md-8">
+                <div class="card card-body"> <!-- Tarjeta de trabajo -->
+                    <table class="table table-striped table-hover"> <!-- Estilo de la tabla de datos -->
+                        <thead>
+                            <tr>
+                                <!-- Titulos de la tabla de datos -->
+                                <th>Id</th>
+                                <th>T韙ulo</th>
+                                <th>Descripci髇</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>  
+                            <%
+                                ListasEnlazadas listaEnlazada = new ListasEnlazadas();
+                                // Obtener el contexto del servlet
+                                ServletContext context = getServletContext();
 
-        <!-- Incluci贸n de la plantilla de footer -->
-        <%@include file= "templates/footer.jsp" %>
+                                listaEnlazada = Archivos.leerArchivoTareas(context);
+                                if (listaEnlazada == null) {
+                                    listaEnlazada = new ListasEnlazadas();
+                                }
+                                out.println(listaEnlazada.MostrarLista());
+                            %>
+                        </tbody>
+                    </table> <!-- Cierre de la etiqueta table-->
+                </div> <!-- Cierre de la clase card card-body -->
+            </div> <!-- Cierre de la clase col-lg-8 col-md-8 -->
+        </div>
+    </div>           
+
+    <!-- Modal de confirmaci髇 para eliminar tarea -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Tarea</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>縀st醩 seguro de que deseas eliminar la tarea "<span id="tareaTituloToDelete"></span>"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton" >Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluci髇 del css -->
+    <link rel="stylesheet" href="css/css.css">
+
+    <!-- Incluci髇 de la plantilla de footer -->
+    <%@include file= "templates/footer.jsp" %>

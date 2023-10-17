@@ -166,6 +166,9 @@
         </div>
     </div>
 
+    <!-- Inclución del css -->
+    <link rel="stylesheet" href="css/style.css">
+    
     <!-- Inclución de las funciones que se encuentran en el script -->
     <script>
         <%@include file= "scripts/script.js" %>

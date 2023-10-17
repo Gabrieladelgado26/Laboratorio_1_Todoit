@@ -1,11 +1,14 @@
-
 package com.mycompany.mundo;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
@@ -60,4 +63,35 @@ public class Archivos {
             System.out.println(e.getMessage());
         }
     }
+
+    public static void escribirArchivoTareas(ListasEnlazadas listaEnlazada, ServletContext context) throws FileNotFoundException {
+        // Ruta relativa y absoluta del archivo de datos serializados
+        String rutaRelativa = "/data/tareas.txt";
+        String rutaAbsoluta = context.getRealPath(rutaRelativa);
+        File archivo = new File(rutaAbsoluta);
+
+        try (FileOutputStream fos = new FileOutputStream(archivo); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(listaEnlazada);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static ListasEnlazadas leerArchivoTareas(ServletContext context) throws FileNotFoundException, ClassNotFoundException {
+        // Implementación del método para leer el archivo y deserializar la lista enlazada
+        ListasEnlazadas listaEnlazada = null;
+        // Ruta relativa y absoluta del archivo de datos serializados
+        String rutaRelativa = "/data/tareas.txt";
+        String rutaAbsoluta = context.getRealPath(rutaRelativa);
+        File archivo = new File(rutaAbsoluta);
+
+        try (FileInputStream fis = new FileInputStream(archivo); ObjectInputStream ois = new ObjectInputStream(fis)) {
+            listaEnlazada = (ListasEnlazadas) ois.readObject();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return listaEnlazada;
+    }
+
 }
