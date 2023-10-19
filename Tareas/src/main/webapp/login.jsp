@@ -51,6 +51,7 @@
                                 </center>
                         </li>
                         <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getAttribute("nombre"));%></a></li>
+                        <li><input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>"></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a style="text-align: left;" class="dropdown-item left-align" href="index.jsp">Cerrar sesión</a></li>
                     </ul>
@@ -64,6 +65,7 @@
                 <div>
                     <h3 align="center" class="color-txt">Bienvenid@ al sistema de Gestión de Tareas</h3>
                     <h4 align="center"><%out.println(request.getAttribute("nombre"));%></h4>
+                    <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
                 </div>
             </div>
             <hr>
@@ -148,21 +150,15 @@
     </div>           
 
     <!-- Modal de confirmación para eliminar tarea -->
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="eliminar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="eliminarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Tarea</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar la tarea "<span id="tareaTituloToDelete"></span>"?</p>
+                    <h4 align="center">¿Estás seguro de que deseas eliminar esta tarea?</h4>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton" >Eliminar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModalConfirm" onclick="eliminarTarea(1)">Eliminar</button>
                 </div>
             </div>
         </div>

@@ -4,11 +4,8 @@ import com.mycompany.mundo.Archivos;
 import com.mycompany.mundo.ListasEnlazadas;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +16,6 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "SvTareas", urlPatterns = {"/SvTareas"})
 public class SvTareas extends HttpServlet {
-
-    ListasEnlazadas listaEnlazada = new ListasEnlazadas();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,36 +29,42 @@ public class SvTareas extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SvTareas</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SvTareas at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
+    ListasEnlazadas listaEnlazada = new ListasEnlazadas();
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-        
-        // Obtiene el contexto del servlet
-        ServletContext context = getServletContext();
-        
-        String idTarea = request.getParameter("id"); // Obtener el ID de la tarea a eliminar
 
-        if (listaEnlazada.EliminarNodo(Integer.parseInt(idTarea))) {
-            Archivos.escribirArchivoTareas(listaEnlazada, context); // Guardar los cambios
-            response.setStatus(HttpServletResponse.SC_OK); // Tarea eliminada con éxito
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // No se encontró la tarea
+        //Obtener el contexto del servlet
+        ServletContext context = getServletContext();
+
+        System.out.println("Corriendo metodo de eliminar");
+
+        try {
+            listaEnlazada = Archivos.leerArchivoTareas(context);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SvTareas.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // Obtiene el titulo de la tarea a eliminar desde los parámetros de la solicitud
+        String idEliminar = request.getParameter("id");
+        
+        System.out.println("Valor de idEliminar: " + idEliminar);
+        
+        if (idEliminar.isEmpty()){
+            System.out.println("Esta vacio");
+        }
+        
+        if (idEliminar != null && !idEliminar.isEmpty()) {
+            int eliminar = Integer.parseInt(idEliminar);
+            listaEnlazada.eliminarTarea(eliminar);
+            Archivos.escribirArchivoTareas(listaEnlazada, context);
+        }
+ 
+        // Redireccionar a la página de destino
+        response.sendRedirect("login.jsp");
     }
 
     @Override
@@ -99,55 +100,7 @@ public class SvTareas extends HttpServlet {
         request.setAttribute("cedula", cedula);
         request.setAttribute("nombre", request.getParameter("nombre"));
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-        dispatcher.forward(request, response);
+        // Redireccionar a la página de destino
+        response.sendRedirect("login.jsp");
     }
-
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // Obtiene el contexto del servlet
-        ServletContext context = getServletContext();
-        
-        String idTarea = request.getParameter("id"); // Obtener el ID de la tarea a eliminar
-
-        if (listaEnlazada.EliminarNodo(Integer.parseInt(idTarea))) {
-            Archivos.escribirArchivoTareas(listaEnlazada, context); // Guardar los cambios
-            response.setStatus(HttpServletResponse.SC_OK); // Tarea eliminada con éxito
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // No se encontró la tarea
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        // Obtiene el contexto del servlet
-        ServletContext context = getServletContext();
-        
-        String idTarea = request.getParameter("id"); // Obtener el ID de la tarea a editar
-        String nuevoTitulo = request.getParameter("titulo"); // Obtener el nuevo título
-        String nuevaDescripcion = request.getParameter("descripcion"); // Obtener la nueva descripción
-        String nuevaFecha = request.getParameter("fecha"); // Obtener la nueva fecha
-
-        if (listaEnlazada.EditarTarea(Integer.parseInt(idTarea), nuevoTitulo, nuevaDescripcion, nuevaFecha)) {
-            Archivos.escribirArchivoTareas(listaEnlazada, context); // Guardar los cambios
-            response.setStatus(HttpServletResponse.SC_OK); // Tarea editada con éxito
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // No se encontró la tarea
-        }
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

@@ -10,12 +10,12 @@
                 <div class="col-md-9 col-lg-7">
                     <div class="login-wrap p-4" style="height: 400px;"> 
                         <div class="content-box text-center">
-                            <div class="text-center">
-                                <h2 class="heading-section">Sistema de Gestión</h2>
-                                <h2 class="heading-section">de Tareas</h2>
-                            </div><br>
                             <!-- Acción que conecta con el servlet llamado SvLogin por metodo POST -->
                             <form action="SvLogin" method="POST" class="signin-form">
+                                <div class="text-center">
+                                    <h2 class="heading-section">Sistema de Gestión</h2>
+                                    <h2 class="heading-section">de Tareas</h2>
+                                </div><br>
                                 <!-- Input para ingresar cédula de usuario -->
                                 <div class="form-group">
                                     <input id="cedula" name="cedula" type="text" class="form-control space-narrow" placeholder="Número de cédula" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
@@ -84,95 +84,100 @@
         request.removeAttribute("noExistente");
     %>
 
-    <!-------------------------------------------- VENTANAS MODALES ------------------------------------------------->
+        <!-------------------------------------------- VENTANAS MODALES ------------------------------------------------->
 
-    <!-- Modal que se muestra si el usario desea registrarse -->
+        <!-- Modal que se muestra si el usario desea registrarse -->
 
-    <div class="modal fade" id="registrarUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <!-- Acción que conecta con el servlet llamado SvUsuario por metodo POST -->
-        <form action="SvUsuario" method="POST">
+        <div class="modal fade" id="registrarUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <!-- Acción que conecta con el servlet llamado SvUsuario por metodo POST -->
+            <form action="SvUsuario" method="POST">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="registrarUsuarioLabel">Regístrate aquí</h1>
+                        </div>
+                        <div class="modal-body" style="z-index: 1050;">
+
+                            <div class="form-outline mb-4">
+                                <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.3); color: black;" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
+                                <label class="form-label" for="cedula">Número de cédula</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
+                                <label class="form-label" for="nombre">Nombre</label>
+                            </div>
+
+                            <div class="form-outline mb-4";">
+                                <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
+                                <label class="form-label" for="contrasenia">Contraseña</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Registrar Usuario</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Modal para informar al usuario que los datos se registraron correctamente-->
+        <div class="modal fade" id="usuarioRegistrado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="registradoLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="registrarUsuarioLabel">Regístrate aquí</h1>
-                    </div>
-                    <div class="modal-body" style="z-index: 1050;">
-
-                        <div class="form-outline mb-4">
-                            <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.3); color: black;" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
-                            <label class="form-label" for="cedula">Número de cédula</label>
-                        </div>
-
-                        <div class="form-outline mb-4">
-                            <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
-                            <label class="form-label" for="nombre">Nombre</label>
-                        </div>
-
-                        <div class="form-outline mb-4";">
-                            <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
-                            <label class="form-label" for="contrasenia">Contraseña</label>
-                        </div>
+                    <div class="modal-body text-center align-middle">
+                        <h4 align="center">Usuario registrado correctamente</h4>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Registrar Usuario</button>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <!-- Modal para informar al usuario que los datos se registraron correctamente-->
-    <div class="modal fade" id="usuarioRegistrado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="registradoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center align-middle">
-                    <h4 align="center">Usuario registrado correctamente</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <!-- Modal que se muestra en caso de que los datos para iniciar sesión no sean validos -->
+        <div class="modal fade" id="usuarioNoRegistrado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="usuarioNoRegistradoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center align-middle">
+                        <h2>Los datos ingresados no son correctos</h2>
+                        <p>Por favor verifique la información</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal que se muestra en caso de que los datos para iniciar sesión no sean validos -->
-    <div class="modal fade" id="usuarioNoRegistrado" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="usuarioNoRegistradoLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center align-middle">
-                    <h2>Los datos ingresados no son correctos</h2>
-                    <p>Por favor verifique la información</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <!-- Modal que se muestra en caso de que la cédula que el usuario intente ingresar ya este en el sistema -->
+        <div class="modal fade" id="mensajeAlerta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mensajeAlertaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body text-center align-middle">
+                        <h2>Datos no validos</h2>
+                        <p>La cédula que intenta ingresar ya esta registrada, por favor verifique la información</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Modal que se muestra en caso de que la cédula que el usuario intente ingresar ya este en el sistema -->
-    <div class="modal fade" id="mensajeAlerta" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mensajeAlertaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body text-center align-middle">
-                    <h2>Datos no validos</h2>
-                    <p>La cédula que intenta ingresar ya esta registrada, por favor verifique la información</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Inclución del css -->
-    <link rel="stylesheet" href="css/style.css">
-    
-    <!-- Inclución de las funciones que se encuentran en el script -->
-    <script>
-        <%@include file= "scripts/script.js" %>
-    </script>
+        <!-- Inclución del css -->
+        <link rel="stylesheet" href="css/style.css">
 
-    <!-- Inclución de la plantilla de footer -->
-    <%@include file= "templates/footer.jsp" %>
+        <!-- Inclución de las funciones que se encuentran en el script -->
+        <script>
+            <%@include file= "scripts/script.js" %>
+        </script>
+
+        <script src="js/jquery.min.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Inclución de la plantilla de footer -->
+        <%@include file= "templates/footer.jsp" %>

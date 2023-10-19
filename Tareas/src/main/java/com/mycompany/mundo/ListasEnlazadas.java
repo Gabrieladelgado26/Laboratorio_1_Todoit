@@ -28,51 +28,54 @@ public class ListasEnlazadas implements Serializable {
 
     public String MostrarLista() {
 
-        Tarea aux = this.cabezera;
+        Tarea tarea = this.cabezera;
         String resultado = "";
 
         // System.out.println(cedula.trim());
-        while (aux != null) {
+        while (tarea != null) {
 
             //if (aux.getCedulaUsuario().equals(cedula)) {
             resultado += "<tr>";
-            resultado += "<td>" + aux.getId() + "</td>";
-            resultado += "<td>" + aux.getTitulo() + "</td>";
-            resultado += "<td>" + aux.getDescripcion() + "</td>";
-            resultado += "<td>" + aux.getFecha() + "</td>";
-            resultado += "<td> <a href=\"#\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + aux.getId() + "\"><i class=\"fas fa-marker\"></i></a>\n"
-                    + "<a href=\"#\" class=\"btn btn-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#confirmDeleteModal\" data-tareaid=\"<%=id%>\" data-tareaTitulo=\"<%=titulo%>\"><i class=\"fas fa-trash-alt\"></i></a></td>";
+            resultado += "<td>" + tarea.getId() + "</td>";
+            resultado += "<td>" + tarea.getTitulo() + "</td>";
+            resultado += "<td>" + tarea.getDescripcion() + "</td>";
+            resultado += "<td>" + tarea.getFecha() + "</td>";
+            resultado += "<td> <a href=\"#\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-marker\"></i></a>";
+            resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
             resultado += "</tr>";
+            System.out.println(tarea.getId());
             //}
-            aux = aux.siguiente;
+            tarea = tarea.siguiente;
         }
         return resultado;
     }
 
-    public boolean EliminarNodo(int idTarea) {
-        if (cabezera == null) {
-            return false; // La lista está vacía, no hay nada que eliminar.
-        }
-
-        if (cabezera.getId() == idTarea) {
-            // Si el nodo a eliminar es el primer nodo (cabezera).
-            cabezera = cabezera.siguiente;
-            return true;
-        }
-
-        Tarea actual = cabezera;
-        while (actual.siguiente != null) {
-            if (actual.siguiente.getId() == idTarea) {
-                // Encontramos el nodo a eliminar.
-                actual.siguiente = actual.siguiente.siguiente;
-                return true;
+    public void eliminarTarea(int idTarea) {
+        if (cabezera != null) {
+            // Caso especial: eliminación del primer elemento
+            if (cabezera.getId() == idTarea) {
+                Tarea temp = cabezera;
+                cabezera = cabezera.siguiente;
+                temp.siguiente = null;
+                return;  // Tarea eliminada, salimos del método
             }
-            actual = actual.siguiente;
+
+            Tarea anterior = cabezera;
+            Tarea actual = cabezera.siguiente;
+
+            while (actual != null) {
+                if (actual.getId() == idTarea) {
+                    // Encontramos la tarea a eliminar
+                    anterior.siguiente = actual.siguiente;
+                    actual.siguiente = null;
+                    return;  // Tarea eliminada, salimos del método
+                }
+                anterior = actual;
+                actual = actual.siguiente;
+            }
         }
-
-        return false; // El nodo con el idTarea no se encontró en la lista.
     }
-
+    
     public boolean EditarTarea(int idTarea, String nuevoTitulo, String nuevaDescripcion, String nuevaFecha) {
         Tarea actual = cabezera;
 

@@ -10467,7 +10467,7 @@ textarea.form-control {
 
 /* Estilos CSS para el contenedor con opacidad negra */
 .content-box {
-    background-color: rgba(0, 0, 0, 0.5); /* Color de fondo negro con poca opacidad */
+    background-color: rgba(0, 0, 0, 0.8)!important; /* Color de fondo negro con poca opacidad */
     padding: 30px; /* Espaciado interior */
     border-radius: 15px; /* Bordes redondeados */
 }
