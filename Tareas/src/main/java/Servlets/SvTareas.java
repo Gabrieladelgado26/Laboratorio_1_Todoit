@@ -86,33 +86,67 @@ public class SvTareas extends HttpServlet {
         }
 
         // Obtiene los datos del formulario enviados por POST
+        String posicion = request.getParameter("posicion");
         String id = request.getParameter("id");
         String titulo = request.getParameter("titulo");
         String descripcion = request.getParameter("descripcion");
         String fecha = request.getParameter("fecha");
-        String cedula = request.getParameter("cedula");
+        String idVerificado = "";
 
         // Verificar si el ID ya existe en la lista
-        boolean idExiste = false;
-        Tarea tareaActual = listaEnlazada.getCabezera();
-        while (tareaActual != null) {
-            if (tareaActual.getId() == Integer.parseInt(id)) {
-                idExiste = true;
-                break;
-            }
-            tareaActual = tareaActual.siguiente;
-        }
-
-        if (idExiste) {
-            // El ID ya existe, muestra el modal de error
-            request.setAttribute("mostrarModalError", true);
-        } else {
+        if (!listaEnlazada.idExistente(Integer.parseInt(id))) {
             // Si el ID no existe, agrega la tarea a la lista
-            listaEnlazada.agregarNodoInicio(Integer.parseInt(id), titulo, descripcion, fecha);
-            Archivos.escribirArchivoTareas(listaEnlazada, context);
+
+            if ("inicio".equals(posicion)) {
+                listaEnlazada.agregarNodoInicio(Integer.parseInt(id), titulo, descripcion, fecha);
+                idVerificado = "true";
+                Archivos.escribirArchivoTareas(listaEnlazada, context);
+            } else if ("antes".equals(posicion)) {
+                String idAnterior = request.getParameter("idAnterior");
+
+                // Verificar si el ID de referencia existe antes de agregar la tarea
+                if (!listaEnlazada.idExistente(Integer.parseInt(idAnterior))) {
+                    // Maneja el caso en que el ID de referencia no existe
+                    idVerificado = "error";
+                } else {
+                    // Verificar si idAnterior no es nulo ni está vacío antes de analizarlo como un entero
+                    if (idAnterior != null && !idAnterior.isEmpty()) {
+                        listaEnlazada.agregarNodoAntes(Integer.parseInt(id), Integer.parseInt(idAnterior), titulo, descripcion, fecha);
+                        idVerificado = "true";
+                        Archivos.escribirArchivoTareas(listaEnlazada, context);
+                    } else {
+                        // Manejar el caso en el que idAnterior es nulo o está vacío
+                        idVerificado = "error";
+                    }
+                }
+            } else if ("despues".equals(posicion)) {
+                String idSiguiente = request.getParameter("idSiguiente");
+
+                // Verificar si el ID de referencia existe antes de agregar la tarea
+                if (!listaEnlazada.idExistente(Integer.parseInt(idSiguiente))) {
+                    // Maneja el caso en que el ID de referencia no existe
+                    idVerificado = "error";
+                } else {
+                    // Verificar si idSiguiente no es nulo ni está vacío antes de analizarlo como un entero
+                    if (idSiguiente != null && !idSiguiente.isEmpty()) {
+                        listaEnlazada.agregarNodoDespues(Integer.parseInt(id), Integer.parseInt(idSiguiente), titulo, descripcion, fecha);
+                        idVerificado = "true";
+                        Archivos.escribirArchivoTareas(listaEnlazada, context);
+                    } else {
+                        // Manejar el caso en el que idAnterior es nulo o está vacío
+                        idVerificado = "error";
+                    }
+                }
+            } else if ("final".equals(posicion)) {
+                listaEnlazada.agregarNodoFinal(Integer.parseInt(id), titulo, descripcion, fecha);
+                idVerificado = "true";
+                Archivos.escribirArchivoTareas(listaEnlazada, context);
+            }
+        } else {
+            idVerificado = "false";
         }
 
         // Redireccionar a la página de destino (login.jsp)
-        request.getRequestDispatcher("login.jsp?usuarioNombre=" + nombreUsuario).forward(request, response);
+        response.sendRedirect("login.jsp?usuarioNombre=" + nombreUsuario + "&idVerificado=" + idVerificado);
     }
 }

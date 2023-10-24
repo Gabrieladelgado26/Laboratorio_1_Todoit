@@ -86,7 +86,7 @@
 
         <!-------------------------------------------- VENTANAS MODALES ------------------------------------------------->
 
-        <!-- Modal que se muestra si el usario desea registrarse -->
+        <!-- Modal que se muestra si el usuario desea registrarse -->
 
         <div class="modal fade" id="registrarUsuario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <!-- Acción que conecta con el servlet llamado SvUsuario por metodo POST -->
@@ -97,19 +97,18 @@
                             <h1 class="modal-title fs-5" id="registrarUsuarioLabel">Regístrate aquí</h1>
                         </div>
                         <div class="modal-body" style="z-index: 1050;">
-
                             <div class="form-outline mb-4">
-                                <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.3); color: black;" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
+                                <input classtype="text" id="cedula" name="cedula" class="form-control" style="background-color: rgba(128, 128, 128, 0.8); color: black;" maxlength="10" required pattern="[0-9]+" title="Por favor, ingrese solo números">
                                 <label class="form-label" for="cedula">Número de cédula</label>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
+                                <input type="text" id="nombre" name="nombre" class="form-control" style="background-color: rgba(128, 128, 128, 0.8);" required >
                                 <label class="form-label" for="nombre">Nombre</label>
                             </div>
 
                             <div class="form-outline mb-4";">
-                                <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.3);" required >
+                                <input type="password" id="contrasenia" name="contrasenia" class="form-control" style="background-color: rgba(128, 128, 128, 0.8);" required >
                                 <label class="form-label" for="contrasenia">Contraseña</label>
                             </div>
                         </div>

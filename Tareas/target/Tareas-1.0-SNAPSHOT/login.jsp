@@ -6,7 +6,7 @@
 <!-- Inclución de la plantilla de header -->
 <%@include file= "templates/header.jsp" %>
 
-<% String nombreUsuario = request.getParameter("usuarioNombre"); %>
+<% String nombreUsuario = request.getParameter("usuarioNombre");%>
 
 <body class="img js-fullheight" style="background-image: url(images/back.jpg);">
     <!-- Clase contenedora -->
@@ -21,10 +21,10 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="index.jsp"></a>
+                                <a class="nav-link active" aria-current="page" href="login.jsp?usuarioNombre=<%out.print(nombreUsuario);%>"></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" style="margin-right: 30px;" href="#">Inicio</a>
+                                <a class="nav-link active" aria-current="page" style="margin-right: 30px;" href="login.jsp?usuarioNombre=<%out.print(nombreUsuario);%>">Inicio</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,9 +37,10 @@
                                 </ul>
                             </li>
                         </ul>
-                        <form class="d-flex" role="search" enctype="multipart/form-data">
-                            <input class="form-control me-2" type="search" id="inputNombre" placeholder="Busqueda" aria-label="Search">
-                            <button href="#" type="button" class="btn btn-outline-success" >Buscar</button>
+                        <form action="SvBuscarOrdenar" method="GET" class="d-flex">
+                            <input type="text" name="usuarioNombre" class="form-control" value="<%=nombreUsuario%>" hidden>
+                            <input class="form-control me-2" type="number" type="search" name="inputId" placeholder="ID de la tarea" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Buscar</button>
                         </form>
                     </div>
                     <!-- Navbar-->
@@ -74,7 +75,7 @@
             <!-- Columna izquierda para el formulario -->
             <br><div class="col-lg-4 col-md-4"> <!-- Clase de división en cuatro columnas -->
                 <div class="card card-body"> <!-- Tarjeta de trabajo -->
-                    <h3>Agregar tarea</h3><br><hr><br> <!-- Titulo del formulario para agregar una tarea -->
+                    <h3>Agregar tarea</h3> <!-- Titulo del formulario para agregar una tarea -->
                     <!-- Formulario que recibe todos los datos para agregar una tarea -->
                     <form action="SvTareas" method="POST">
                         <input type="hidden" name="usuarioNombre" type="text" value="<%= nombreUsuario%>">
@@ -109,26 +110,73 @@
                                 <input id="fecha" name="fecha" type="date" class="form-control" required>
                             </div>
                         </div>
-                        <!-- Botón de tipo submit que permite agregar una tarea -->
-                        <br><br><button type="submit" class="btn btn-success"">Agregar tarea</button>
-                        <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
-                        <br>
+
+                        <!-- Botón que permite mostrar las opciones para agregar una tarea -->
+                        <br><button id="agregarTareaBtn" type="button" class="btn btn-success">Agregar tarea</button>
+
+                        <div id="radioButtonsContainer" style="display: none;">
+                            <!-- Radio buttons para elegir la posición de la tarea -->
+
+                            <div class="form-check" style="margin-bottom: 10px">
+                                <input type="radio" name="posicion" id="inicio" value="inicio" class="form-check-input" required>
+                                <label for="inicio" class="form-check-label">Al inicio</label>
+                            </div>
+
+                            <div class="form-check d-flex" style="max-width: 500px;">
+                                <input type="radio" name="posicion" id="antes" value="antes" class="form-check-input" required>
+                                <label for="antes" class="form-check-label" style="margin-right: 42px; white-space: nowrap;"> Anterior a una tarea</label>
+
+                                <!-- Input para ID Anterior (deshabilitado inicialmente) -->
+                                <div class="input-group" style="max-width: 200px;">
+                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior">
+                                </div>
+                            </div>
+
+                            <div class="form-check d-flex" style="max-width: 500px;">
+                                <input type="radio" name="posicion" id="despues" value="despues" class="form-check-input" required>
+                                <label for="despues" class="form-check-label" style="margin-right: 30px; white-space: nowrap;"> Después de una tarea</label>
+
+                                <!-- Input para ID Siguiente (deshabilitado inicialmente) -->
+                                <div class="input-group" style="max-width: 200px;">
+                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente">
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                <input type="radio" name="posicion" id="final" value="final" class="form-check-input" required>
+                                <label for="final" class="form-check-label">Al final</label>
+                            </div>
+                            <center><button id="agregarTareaFinalBtn" type="submit" class="btn btn-success" style="display: none; margin-top: 15px;">Agregar Tarea</button></center>
+                        </div>
                     </form>
                 </div> <!-- Cierre de la clase card card-body -->
             </div> <!-- Cierre de la clase col-lg-4 col-md-4 -->
 
             <!---------------------------------------- Verificación de ID -------------------------------------------->
+            <%
+                String idVerificado = request.getParameter("idVerificado");
+                if (idVerificado != null && idVerificado.equals("false")) {
+            %>
+            <!-- Método que permite mostrar el modal que informa que ya existe el ID en la lista -->
             <script>
-                <%
-                    if (request.getAttribute("mostrarModalError") != null && (boolean) request.getAttribute("mostrarModalError")) {
-                %>
                 $(document).ready(function () {
-                    $('#modalError').modal('show');
+                    idExistente();
                 });
-                <%
-                    }
-                %>
             </script>
+            <%
+                }
+                if (idVerificado != null && idVerificado.equals("error")) {
+            %>
+            <!-- Método que permite mostrar el modal que informa que el ID no es valido -->
+            <script>
+                $(document).ready(function () {
+                    idNoValido();
+                });
+            </script>
+            <%
+                }
+                request.removeAttribute("idVerificado");
+            %>
 
             <!-- Columna del lado derecho para la tabla de datos -->
             <div class="col-lg-8 col-md-8">
@@ -146,15 +194,26 @@
                         </thead>
                         <tbody>  
                             <%
+                                String inputId = request.getParameter("buscar");  // Obtén el ID de búsqueda
                                 ListasEnlazadas listaEnlazada = new ListasEnlazadas();
-                                // Obtener el contexto del servlet
                                 ServletContext context = getServletContext();
 
                                 listaEnlazada = Archivos.leerArchivoTareas(context);
+
                                 if (listaEnlazada == null) {
                                     listaEnlazada = new ListasEnlazadas();
                                 }
-                                out.println(listaEnlazada.MostrarLista());
+
+                                String tablaTareas = "";
+
+                                if (inputId != null && !inputId.isEmpty()) {
+                                    // Si se proporciona un ID, genera una tabla de tareas filtrada por ese ID
+                                    tablaTareas = listaEnlazada.generarTablaBusqueda(inputId);
+                                } else {
+                                    // Si no se proporciona un ID, genera la tabla de todas las tareas
+                                    tablaTareas = listaEnlazada.MostrarLista();
+                                }
+                                out.println(tablaTareas);  // Imprime la tabla de tareas
                             %>
                         </tbody>
                     </table> <!-- Cierre de la etiqueta table-->
@@ -286,6 +345,20 @@
                 <div class="modal-body text-center align-middle">
                     <h2>Datos no validos</h2>
                     <p>El ID que intenta ingresar ya se encuentra registrado, por favor verifique la información</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalErrorReferencia" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalErrorReferenciaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center align-middle">
+                    <h2>Datos no validos</h2>
+                    <p>El ID de referencia no es valido, por favor verifique la información</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

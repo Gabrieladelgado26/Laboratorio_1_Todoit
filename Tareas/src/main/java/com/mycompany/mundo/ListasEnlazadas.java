@@ -129,6 +129,21 @@ public class ListasEnlazadas implements Serializable {
         }
     }
 
+    public boolean idExistente(int id) {
+        Tarea actual = cabezera;
+
+        // Itera a través de la lista enlazada
+        while (actual != null) {
+            if (actual.getId() == id) {
+                return true; // El ID existe en la lista
+            }
+            actual = actual.siguiente;
+        }
+
+        // El ID no se encontró en la lista
+        return false;
+    }
+
     /**
      * Genera una representación en formato HTML de la lista de tareas
      *
@@ -149,6 +164,30 @@ public class ListasEnlazadas implements Serializable {
             resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
             resultado += "</tr>";
             tarea = tarea.siguiente;
+        }
+        return resultado;
+    }
+
+    public String generarTablaBusqueda(String inputId) {
+        Tarea tarea = this.cabezera;
+        String resultado = "";
+        boolean tareaId = false;
+
+        if (tarea != null && inputId != null && !inputId.isEmpty()) {
+            while (tarea != null) {
+                if (tarea.getId() == Integer.parseInt(inputId)) {
+                    resultado += "<tr>";
+                    resultado += "<td>" + tarea.getId() + "</td>";
+                    resultado += "<td>" + tarea.getTitulo() + "</td>";
+                    resultado += "<td>" + tarea.getDescripcion() + "</td>";
+                    resultado += "<td>" + tarea.getFecha() + "</td>";
+                    resultado += "<td> <a href=\"#\" type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-marker\"></i></a>";
+                    resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
+                    resultado += "</tr>";
+                    tareaId = true;
+                }
+                tarea = tarea.siguiente;
+            }
         }
         return resultado;
     }
