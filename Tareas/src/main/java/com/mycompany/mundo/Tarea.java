@@ -4,28 +4,19 @@ package com.mycompany.mundo;
 import java.io.Serializable;
 
 public class Tarea implements Serializable{
-    
-    private String cedulaUsuario;
+
     private int id;
     private String titulo;
     private String descripcion;
     private String fecha;
     public Tarea siguiente;
 
-    public String getCedulaUsuario() {
-        return cedulaUsuario;
-    }
 
-    public void setCedulaUsuario(String cedulaUsuario) {
-        this.cedulaUsuario = cedulaUsuario;
-    }
-
-    public Tarea(int id, String titulo, String descripcion,  String fecha, String cedulaUsuario) {
+    public Tarea(int id, String titulo, String descripcion,  String fecha) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.fecha = fecha;
-        this.cedulaUsuario = cedulaUsuario;
         this.siguiente = null;
     }
 

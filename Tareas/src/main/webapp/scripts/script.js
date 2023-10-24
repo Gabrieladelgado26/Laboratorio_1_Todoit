@@ -2,7 +2,7 @@
  * Variable global utilizada para almacenar temporalmente el id de la tarea
  * que se mostrará en el modal de confirmación antes de eliminarlo.
  */
-var id = "4";
+var id = "";
 
 /**
  * Esta función se encarga de mostrar el modal de confirmación antes de eliminar una tarea.
@@ -31,9 +31,6 @@ function eliminarTarea() {
 
     // Obtiene el id de la tarea desde una variable previamente definida (id)
     var idTarea = id;
-
-    // Registra el id de la tarea en la consola (para fines de depuración)
-    console.log(id);
 
     // Realiza una solicitud AJAX al servlet 'SvEliminar' para eliminar la solicitud
     $.ajax({
@@ -76,4 +73,64 @@ function usuarioSinVerificar() {
  */
 function cedulaExistente() {
     $("#mensajeAlerta").modal("show");
+}
+
+var idEditar = "";
+
+$('#editModalConfirm').on('show.bs.modal', function (event) {
+    // Obtiene el botón que desencadenó el evento de mostrar el modal
+    var button = $(event.relatedTarget);
+
+    // Obtiene el id de la tarea desde el atributo 'data-nombre' del botón
+    var idTarea = button.data('nombre');
+
+    // Obtiene el modal actual
+    var modal = $(this);
+
+    // Almacena el nombre del perro en la variable global 'nombreP'
+    idEditar = idTarea;
+});
+
+///**
+// * Esta función se encarga de editar una tarea a través de una solicitud AJAX al servidor.
+// */
+function editarCaracteristicas(id) {
+
+    var form = document.getElementById(id);
+
+    // Verificar la validez del formulario
+    if (form.checkValidity()) {
+
+        var id = idEditar;
+
+        // Obtener el valor del nuevo título ingresado por el usuario
+        var nuevoTitulo = document.getElementById('nuevoTitulo').value || "";
+
+        // Obtener el valor de la nueva descripción ingresada por el usuario
+        var nuevaDescripcion = document.getElementById('nuevaDescripcion').value || "";
+
+        // Obtener el valor de la nueva fecha ingresada por el usuario
+        var nuevaFecha = document.getElementById('nuevaFecha').value || "";
+
+        // Realiza una solicitud AJAX al servlet 'SvEditar' para editar las características de la tarea
+        $.ajax({
+            url: 'SvEditar?id=' + id + '&titulo=' + nuevoTitulo + '&descripcion=' + nuevaDescripcion + '&fecha=' + nuevaFecha, // URL con cuatro parámetros: id, titulo, descripcion y fecha
+            method: 'GET', // Método HTTP utilizado para la solicitud (POST en este caso)
+            success: function (data) {
+                // En caso de éxito en la solicitud
+
+                // Recarga la página actual para reflejar los cambios
+                location.reload();
+            },
+            error: function () {
+                // En caso de error en la solicitud:
+
+                // Registra un mensaje de error en la consola (para fines de depuración)
+                console.log('Error al editar las características de la tarea.');
+            }
+        });
+    } else {
+        // Mostrar un mensaje de error o manejar la validación del formulario
+        console.log("Error");
+    }   
 }

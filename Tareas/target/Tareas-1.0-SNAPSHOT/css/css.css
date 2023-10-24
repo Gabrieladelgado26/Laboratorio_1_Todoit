@@ -21,10 +21,6 @@
     text-align: center; /* Alineación del texto al centro */
 }
 
-.color-txt {
-    color: blue; /* Color del texto en el encabezado */
-}
-
 img, svg {
     vertical-align: middle;
 }

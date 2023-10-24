@@ -2,6 +2,7 @@ package Servlets;
 
 import com.mycompany.mundo.Archivos;
 import com.mycompany.mundo.ListasEnlazadas;
+import com.mycompany.mundo.Tarea;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public class SvTareas extends HttpServlet {
     }
 
     ListasEnlazadas listaEnlazada = new ListasEnlazadas();
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,19 +51,15 @@ public class SvTareas extends HttpServlet {
 
         // Obtiene el titulo de la tarea a eliminar desde los parámetros de la solicitud
         String idEliminar = request.getParameter("id");
-        
+
         System.out.println("Valor de idEliminar: " + idEliminar);
-        
-        if (idEliminar.isEmpty()){
-            System.out.println("Esta vacio");
-        }
-        
+
         if (idEliminar != null && !idEliminar.isEmpty()) {
             int eliminar = Integer.parseInt(idEliminar);
             listaEnlazada.eliminarTarea(eliminar);
             Archivos.escribirArchivoTareas(listaEnlazada, context);
         }
- 
+
         // Redireccionar a la página de destino
         response.sendRedirect("login.jsp");
     }
@@ -70,6 +67,8 @@ public class SvTareas extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, FileNotFoundException {
+
+        String nombreUsuario = request.getParameter("usuarioNombre");
 
         // Obtiene la sesión actual del usuario
         HttpSession session = request.getSession();
@@ -93,14 +92,27 @@ public class SvTareas extends HttpServlet {
         String fecha = request.getParameter("fecha");
         String cedula = request.getParameter("cedula");
 
-        listaEnlazada.AgregarNodo(Integer.parseInt(id), titulo, descripcion, fecha, cedula);
+        // Verificar si el ID ya existe en la lista
+        boolean idExiste = false;
+        Tarea tareaActual = listaEnlazada.getCabezera();
+        while (tareaActual != null) {
+            if (tareaActual.getId() == Integer.parseInt(id)) {
+                idExiste = true;
+                break;
+            }
+            tareaActual = tareaActual.siguiente;
+        }
 
-        Archivos.escribirArchivoTareas(listaEnlazada, context);
+        if (idExiste) {
+            // El ID ya existe, muestra el modal de error
+            request.setAttribute("mostrarModalError", true);
+        } else {
+            // Si el ID no existe, agrega la tarea a la lista
+            listaEnlazada.agregarNodoInicio(Integer.parseInt(id), titulo, descripcion, fecha);
+            Archivos.escribirArchivoTareas(listaEnlazada, context);
+        }
 
-        request.setAttribute("cedula", cedula);
-        request.setAttribute("nombre", request.getParameter("nombre"));
-
-        // Redireccionar a la página de destino
-        response.sendRedirect("login.jsp");
+        // Redireccionar a la página de destino (login.jsp)
+        request.getRequestDispatcher("login.jsp?usuarioNombre=" + nombreUsuario).forward(request, response);
     }
 }

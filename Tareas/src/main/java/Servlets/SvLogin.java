@@ -44,12 +44,17 @@ public class SvLogin extends HttpServlet {
     }
 
     /**
-     * Este método se llama cuando se recibe una solicitud POST de un usuario para iniciar sesión
+     * Este método se llama cuando se recibe una solicitud POST de un usuario
+     * para iniciar sesión
      *
-     * @param request El objeto HttpServletRequest que contiene la solicitud HTTP
-     * @param response El objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP
-     * @throws ServletException Excepción que se lanza si hay un error en el servlet
-     * @throws IOException Excepción que se lanza si hay un error de entrada o de salida
+     * @param request El objeto HttpServletRequest que contiene la solicitud
+     * HTTP
+     * @param response El objeto HttpServletResponse que se utilizará para
+     * enviar la respuesta HTTP
+     * @throws ServletException Excepción que se lanza si hay un error en el
+     * servlet
+     * @throws IOException Excepción que se lanza si hay un error de entrada o
+     * de salida
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -63,13 +68,12 @@ public class SvLogin extends HttpServlet {
         ServletContext context = getServletContext();
 
         // Verificar si el usuario existe utilizando la función verificarUsuario
-        Usuario user = verificarUsuario(cedula, contrasenia, context);
+        String user = verificarUsuario(cedula, contrasenia, context);
 
         // Si el usuario existe, configurar atributos en la solicitud y redirigir a "login.jsp"
         if (user != null) {
-            request.setAttribute("cedula", user.getCedula());
-            request.setAttribute("nombre", user.getNombre());
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            // request.setAttribute("nombre", user.getNombre());
+            request.getRequestDispatcher("login.jsp?usuarioNombre=" + user).forward(request, response);
         } else {
             // Si el usuario no existe, redirigir a "index.jsp" con un parámetro "noExistente"
             request.getRequestDispatcher("index.jsp?noExistente=" + "false").forward(request, response);
@@ -86,14 +90,14 @@ public class SvLogin extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public static Usuario verificarUsuario(int cedulaV, String contraseñaV, ServletContext context) throws IOException {
+    public static String verificarUsuario(int cedulaVerificada, String contraseñaVerificada, ServletContext context) throws IOException {
         ArrayList<Usuario> misUsuarios = new ArrayList<>();
 
         Archivos.leerArchivo(misUsuarios, context);
 
-        for (Usuario u : misUsuarios) {
-            if (u.getCedula() == cedulaV && u.getContrasenia().equals(contraseñaV)) {
-                return u;
+        for (Usuario usuario : misUsuarios) {
+            if (usuario.getCedula() == cedulaVerificada && usuario.getContrasenia().equals(contraseñaVerificada)) {
+                return usuario.getNombre();
             }
         }
         return null;

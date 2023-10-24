@@ -6,6 +6,8 @@
 <!-- Inclución de la plantilla de header -->
 <%@include file= "templates/header.jsp" %>
 
+<% String nombreUsuario = request.getParameter("usuarioNombre"); %>
+
 <body class="img js-fullheight" style="background-image: url(images/back.jpg);">
     <!-- Clase contenedora -->
     <div class="container p-4">
@@ -47,11 +49,11 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li>
                                 <center>
-                                    <img src="./images/iconoUsuario.png" alt="" width="150px" height="150px" style="display: block; margin: 0 auto;">
+                                    <img src="./images/icono.png" alt="" width="150px" height="150px" style="display: block; margin: 0 auto;">
                                 </center>
                         </li>
-                        <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getAttribute("nombre"));%></a></li>
-                        <li><input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>"></li>
+
+                        <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getParameter("usuarioNombre"));%></a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a style="text-align: left;" class="dropdown-item left-align" href="index.jsp">Cerrar sesión</a></li>
                     </ul>
@@ -63,9 +65,8 @@
             <!-- Mensaje de bienvenida -->
             <div class="card card-body" align-items: center;>
                 <div>
-                    <h3 align="center" class="color-txt">Bienvenid@ al sistema de Gestión de Tareas</h3>
-                    <h4 align="center"><%out.println(request.getAttribute("nombre"));%></h4>
-                    <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
+                    <h3 align="center">Bienvenid@ al sistema de Gestión de Tareas</h3>
+                    <h4 align="center"><%out.println(request.getParameter("usuarioNombre"));%></h4>
                 </div>
             </div>
             <hr>
@@ -74,8 +75,9 @@
             <br><div class="col-lg-4 col-md-4"> <!-- Clase de división en cuatro columnas -->
                 <div class="card card-body"> <!-- Tarjeta de trabajo -->
                     <h3>Agregar tarea</h3><br><hr><br> <!-- Titulo del formulario para agregar una tarea -->
+                    <!-- Formulario que recibe todos los datos para agregar una tarea -->
                     <form action="SvTareas" method="POST">
-                        <!-- Formulario que recibe todos los datos para agregar una tarea -->
+                        <input type="hidden" name="usuarioNombre" type="text" value="<%= nombreUsuario%>">
                         <div class="col-auto">
                             <label class="visually-hidden">Id</label>
                             <div class="input-group">
@@ -107,14 +109,26 @@
                                 <input id="fecha" name="fecha" type="date" class="form-control" required>
                             </div>
                         </div>
-                        <input type="hidden" id="cedula" name="cedula" type="text" value="<%out.println(request.getAttribute("cedula"));%>">
-                        <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
                         <!-- Botón de tipo submit que permite agregar una tarea -->
                         <br><br><button type="submit" class="btn btn-success"">Agregar tarea</button>
+                        <input type="hidden" id="nombre" name="nombre" type="text" value="<%out.println(request.getAttribute("nombre"));%>">
                         <br>
                     </form>
                 </div> <!-- Cierre de la clase card card-body -->
             </div> <!-- Cierre de la clase col-lg-4 col-md-4 -->
+
+            <!---------------------------------------- Verificación de ID -------------------------------------------->
+            <script>
+                <%
+                    if (request.getAttribute("mostrarModalError") != null && (boolean) request.getAttribute("mostrarModalError")) {
+                %>
+                $(document).ready(function () {
+                    $('#modalError').modal('show');
+                });
+                <%
+                    }
+                %>
+            </script>
 
             <!-- Columna del lado derecho para la tabla de datos -->
             <div class="col-lg-8 col-md-8">
@@ -163,6 +177,127 @@
             </div>
         </div>
     </div>
+
+    <!------------------------------------------ Modales para editar las caracteristicas ---------------------------------------------->
+
+    <!-- Modal principal para editar las caracteristicas de una tarea -->
+    <div class="modal fade" id="editModalConfirm" tabindex="-1" aria-labelledby="editModalLabelConfirm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabelConfirm">Editar información de la tarea</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="editModalConfirm" style="display: flex; justify-content: center;">
+                        <button href="#" type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-right: 15px;" data-bs-target="#editTitulo" >Editar título</button>
+                        <button href="#" type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-right: 15px;" data-bs-target="#editDescripcion" >Editar descripción</button>
+                        <button href="#" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editFecha" >Editar Fecha</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 10px;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar el titulo la tarea -->
+    <div class="modal fade" id="editTitulo" tabindex="-1" role="dialog" aria-labelledby="editTituloLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="miFormularioTitulo">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editTituloLabel">Editar titulo</></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tarea-detalles" style="display: flex; justify-content: center;">
+                            <label class="visually-hidden" for="descripcion">Titulo</label>
+                            <div class="input-group">
+                                <div class="input-group-text">Ingresa el nuevo título:</div>
+                                <input type="text" class="form-control" id="nuevoTitulo" name="titulo" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModalConfirm" style="margin-right: 10px;">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" onclick="editarCaracteristicas('nuevoTitulo')">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar la descripción de la tarea -->
+    <div class="modal fade" id="editDescripcion" tabindex="-1" aria-labelledby="editDescripcionLabelConfirm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="miFormularioDescripcion">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editDescripcionLabelConfirm">Editar descripción</span></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tarea-detalles" style="display: flex; justify-content: center;">
+                            <label class="visually-hidden" for="descripcion">Descripción</label>
+                            <div class="input-group">
+                                <div class="input-group-text">Ingresa la nueva descripción:</div>
+                                <textarea type="text" class="form-control" id="nuevaDescripcion" name="descripcion" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModalConfirm" style="margin-right: 10px;">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" onclick="editarCaracteristicas('miFormularioDescripcion')">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar la fecha de la tarea -->
+    <div class="modal fade" id="editFecha" tabindex="-1" aria-labelledby="editFechaLabelConfirm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="miFormularioFecha" >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editFechaLabelConfirm">Editar foto</span></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tarea-detalles" style="display: flex; justify-content: center;">
+                            <label class="visually-hidden" for="fecha">Fecha</label>
+                            <div class="input-group">
+                                <div class="input-group-text">Ingresa la nueva fecha:</div>
+                                <input type="date" class="form-control" id="nuevaFecha" name="nuevaFecha" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModalConfirm" style="margin-right: 10px;">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" onclick="editarCaracteristicas('miFormularioFecha')">Actualizar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal que se muestra en caso de que el ID de la tarea ya este en el sistema -->
+    <div class="modal fade" id="modalError" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center align-middle">
+                    <h2>Datos no validos</h2>
+                    <p>El ID que intenta ingresar ya se encuentra registrado, por favor verifique la información</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclución de las funciones que se encuentran en el script -->
+    <script>
+        <%@include file= "scripts/script.js" %>
+    </script>  
 
     <!-- Inclución del css -->
     <link rel="stylesheet" href="css/css.css">
