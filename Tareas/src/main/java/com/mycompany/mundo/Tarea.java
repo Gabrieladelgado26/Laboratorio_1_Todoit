@@ -20,6 +20,9 @@ public class Tarea implements Serializable{
         this.siguiente = null;
     }
 
+    public Tarea() {
+    }
+
     public int getId() {
         return id;
     }

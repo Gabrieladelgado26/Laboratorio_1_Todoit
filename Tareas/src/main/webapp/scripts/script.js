@@ -28,9 +28,17 @@ $('#eliminar').on('show.bs.modal', function (event) {
  * Esta función se encarga de eliminar una tarea a través de una solicitud AJAX al servidor.
  */
 function eliminarTarea() {
-
     // Obtiene el id de la tarea desde una variable previamente definida (id)
     var idTarea = id;
+
+    // Obtiene la URL actual
+    var currentURL = new URL(window.location.href);
+
+    // Elimina el parámetro "idVerificado" de la URL
+    currentURL.searchParams.delete("idVerificado");
+
+    // Construye la nueva URL sin el parámetro "idVerificado"
+    var newURL = currentURL.href;
 
     // Realiza una solicitud AJAX al servlet 'SvEliminar' para eliminar la solicitud
     $.ajax({
@@ -42,8 +50,8 @@ function eliminarTarea() {
             // Cierra el modal de eliminación
             $('#eliminar').modal('hide');
 
-            // Recarga la página actual para reflejar los cambios
-            location.reload();
+            // Recarga la página actual para reflejar los cambios con la nueva URL
+            window.location.href = newURL;
         },
         error: function () {
             // En caso de error en la solicitud:

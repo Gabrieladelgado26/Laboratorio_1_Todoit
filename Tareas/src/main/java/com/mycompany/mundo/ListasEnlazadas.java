@@ -7,14 +7,6 @@ public class ListasEnlazadas implements Serializable {
     // Cabeza de la lista enlazada que apunta al primer nodo
     private Tarea cabezera;
 
-    public Tarea getCabezera() {
-        return cabezera;
-    }
-
-    public void setCabezera(Tarea cabezera) {
-        this.cabezera = cabezera;
-    }
-
     /**
      * Agrega un nuevo nodo al principio de la lista
      *

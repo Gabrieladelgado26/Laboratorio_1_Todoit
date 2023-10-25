@@ -8,7 +8,7 @@
 
 <% String nombreUsuario = request.getParameter("usuarioNombre");%>
 
-<body class="img js-fullheight" style="background-image: url(images/back.jpg);">
+<body class="img js-fullheight" style="background-image: url(images/fondoLogin.jpg);">
     <!-- Clase contenedora -->
     <div class="container p-4">
         <div class="row">
@@ -128,7 +128,7 @@
 
                                 <!-- Input para ID Anterior (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior">
+                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior" required pattern="[0-9]+">
                                 </div>
                             </div>
 
@@ -138,7 +138,7 @@
 
                                 <!-- Input para ID Siguiente (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente">
+                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente" required pattern="[0-9]+">
                                 </div>
                             </div>
 
@@ -154,6 +154,7 @@
 
             <!---------------------------------------- Verificación de ID -------------------------------------------->
             <%
+
                 String idVerificado = request.getParameter("idVerificado");
                 if (idVerificado != null && idVerificado.equals("false")) {
             %>
@@ -175,7 +176,6 @@
             </script>
             <%
                 }
-                request.removeAttribute("idVerificado");
             %>
 
             <!-- Columna del lado derecho para la tabla de datos -->
@@ -214,7 +214,7 @@
                                     tablaTareas = listaEnlazada.MostrarLista();
                                 }
                                 out.println(tablaTareas);  // Imprime la tabla de tareas
-                            %>
+%>
                         </tbody>
                     </table> <!-- Cierre de la etiqueta table-->
                 </div> <!-- Cierre de la clase card card-body -->

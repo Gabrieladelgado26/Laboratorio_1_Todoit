@@ -96,7 +96,8 @@ public class SvLogin extends HttpServlet {
         Archivos.leerArchivo(misUsuarios, context);
 
         for (Usuario usuario : misUsuarios) {
-            if (usuario.getCedula() == cedulaVerificada && usuario.getContrasenia().equals(contraseñaVerificada)) {
+            if (usuario.getCedula() == cedulaVerificada && 
+                usuario.getContrasenia().equals(contraseñaVerificada)) {
                 return usuario.getNombre();
             }
         }

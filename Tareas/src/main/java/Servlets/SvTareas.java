@@ -41,6 +41,8 @@ public class SvTareas extends HttpServlet {
         //Obtener el contexto del servlet
         ServletContext context = getServletContext();
 
+        String nombreUsuario = request.getParameter("usuarioNombre");
+
         System.out.println("Corriendo metodo de eliminar");
 
         try {
@@ -60,8 +62,11 @@ public class SvTareas extends HttpServlet {
             Archivos.escribirArchivoTareas(listaEnlazada, context);
         }
 
-        // Redireccionar a la página de destino
-        response.sendRedirect("login.jsp");
+        String idVerificado = "true";
+
+        // Redireccionar a la página de destino (login.jsp)
+        response.sendRedirect("login.jsp?usuarioNombre=" + nombreUsuario + "&idVerificado=" + idVerificado);
+
     }
 
     @Override
@@ -69,9 +74,6 @@ public class SvTareas extends HttpServlet {
             throws ServletException, IOException, FileNotFoundException {
 
         String nombreUsuario = request.getParameter("usuarioNombre");
-
-        // Obtiene la sesión actual del usuario
-        HttpSession session = request.getSession();
 
         // Obtiene el contexto del servlet
         ServletContext context = getServletContext();
@@ -82,7 +84,7 @@ public class SvTareas extends HttpServlet {
                 listaEnlazada = new ListasEnlazadas();
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SvTareas.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SvLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         // Obtiene los datos del formulario enviados por POST
