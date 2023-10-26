@@ -9,10 +9,16 @@
 <% String nombreUsuario = request.getParameter("usuarioNombre");%>
 <%
     String validacion = request.getParameter("idVerificado");
+    
+    String inputId = request.getParameter("buscar");
 
+    if (inputId == null){
+        inputId = "";
+    }
+    
     if (validacion == null) {
         String nuevoParametro = "nada";
-        response.sendRedirect("login.jsp?idVerificado=" + nuevoParametro + "&usuarioNombre=" + nombreUsuario);
+        response.sendRedirect("login.jsp?idVerificado=" + nuevoParametro + "&usuarioNombre=" + nombreUsuario + "&buscar=" + inputId);
     }
     
     // Crear una instancia de la clase ListasEnlazadas
@@ -131,13 +137,12 @@
                             if (verificar == true) {
                         %>
                         <!-- En caso que si existan tareas (Muestra boton que pregunta donde agregar) -->
-                        <br><button id="agregarTareaBtn" type="button" class="btn btn-primary">Agregar tarea</button>
+                        <br><center><button id="agregarTareaBtn" type="button" class="btn btn-primary">Agregar tarea</button></center>
                         <%
                         } else if (verificar == false) {
                         %>
                         <!-- En caso de que no existan tareas muestra el boton para agregar la tarea directamente -->
-                        <br><button  type="submit" class="btn btn-primary">Agregar tarea</button>
-
+                        <br><center><button type="submit" class="btn btn-primary">Agregar tarea</button></center>
                         <%
                             }
                         %>
@@ -220,8 +225,6 @@
                         </thead>
                         <tbody>  
                             <%
-                                String inputId = request.getParameter("buscar");  // Obtén el ID de búsqueda
-
                                 String tablaTareas = "";
 
                                 if (inputId != null && !inputId.isEmpty()) {
