@@ -105,6 +105,17 @@ $('#editModalConfirm').on('show.bs.modal', function (event) {
 function editarCaracteristicas(id) {
 
     var form = document.getElementById(id);
+    
+    
+    // Obtiene la URL actual
+    var currentURL = new URL(window.location.href);
+
+    // Elimina el parámetro "idVerificado" de la URL
+    currentURL.searchParams.delete("idVerificado");
+
+    // Construye la nueva URL sin el parámetro "idVerificado"
+    var newURL = currentURL.href;
+
 
     // Verificar la validez del formulario
     if (form.checkValidity()) {
@@ -125,10 +136,11 @@ function editarCaracteristicas(id) {
             url: 'SvEditar?id=' + id + '&titulo=' + nuevoTitulo + '&descripcion=' + nuevaDescripcion + '&fecha=' + nuevaFecha, // URL con cuatro parámetros: id, titulo, descripcion y fecha
             method: 'GET', // Método HTTP utilizado para la solicitud (POST en este caso)
             success: function (data) {
-                // En caso de éxito en la solicitud
+                 // En caso de éxito en la solicitud
 
-                // Recarga la página actual para reflejar los cambios
-                location.reload();
+                // Recarga la página actual para reflejar los cambios con la nueva URL
+                window.location.href = newURL;
+
             },
             error: function () {
                 // En caso de error en la solicitud:

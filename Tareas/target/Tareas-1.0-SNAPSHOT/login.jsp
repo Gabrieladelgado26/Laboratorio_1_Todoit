@@ -7,8 +7,27 @@
 <%@include file= "templates/header.jsp" %>
 
 <% String nombreUsuario = request.getParameter("usuarioNombre");%>
+<%
+    // Crear una instancia de la clase ListasEnlazadas
+    ListasEnlazadas listaEnlazada = new ListasEnlazadas();
 
-<body class="img js-fullheight" style="background-image: url(images/fondoLogin.jpg);">
+    // Obtener el contexto del servlet
+    ServletContext context = getServletContext();
+
+    listaEnlazada = Archivos.leerArchivoTareas(context);
+
+    // Verificamos si listaTareas no es null antes de llamar a verificar
+    boolean verificar = listaEnlazada.verificar();
+
+    if (listaEnlazada == null) {
+        listaEnlazada = new ListasEnlazadas();
+    }
+
+    System.out.println(verificar);
+%>
+
+
+<body class="img js-fullheight" style="background-image: url(images/fondoL.jpeg);">
     <!-- Clase contenedora -->
     <div class="container p-4">
         <div class="row">
@@ -26,21 +45,11 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" style="margin-right: 30px;" href="login.jsp?usuarioNombre=<%out.print(nombreUsuario);%>">Inicio</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Opciones
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Opción 1</a></li>
-                                    <li><a class="dropdown-item" href="#">Opción 2</a></li>
-                                    <li><a class="dropdown-item" href="#">Opción 3</a></li>
-                                </ul>
-                            </li>
                         </ul>
-                        <form action="SvBuscarOrdenar" method="GET" class="d-flex">
+                        <form action="SvBuscar" method="GET" class="d-flex">
                             <input type="text" name="usuarioNombre" class="form-control" value="<%=nombreUsuario%>" hidden>
                             <input class="form-control me-2" type="number" type="search" name="inputId" placeholder="ID de la tarea" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Buscar</button>
+                            <button class="btn btn-outline-primary" type="submit">Buscar</button>
                         </form>
                     </div>
                     <!-- Navbar-->
@@ -50,10 +59,9 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li>
                                 <center>
-                                    <img src="./images/icono.png" alt="" width="150px" height="150px" style="display: block; margin: 0 auto;">
+                                    <img src="./images/fondoLog.jpeg" alt="" width="160px" height="150px" style="display: block; margin: 0 auto;">
                                 </center>
-                        </li>
-
+                                </li>
                         <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getParameter("usuarioNombre"));%></a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a style="text-align: left;" class="dropdown-item left-align" href="index.jsp">Cerrar sesión</a></li>
@@ -111,50 +119,61 @@
                             </div>
                         </div>
 
-                        <!-- Botón que permite mostrar las opciones para agregar una tarea -->
-                        <br><button id="agregarTareaBtn" type="button" class="btn btn-success">Agregar tarea</button>
+                        <%
+                            //Condicional if para saber si existen tareas en el archivo
+                            if (verificar == true) {
+                        %>
+                        <!-- En caso que si existan tareas (Muestra boton que pregunta donde agregar) -->
+                        <br><button id="agregarTareaBtn" type="button" class="btn btn-primary">Agregar tarea</button>
+                        <%
+                        } else if (verificar == false) {
+                        %>
+                        <!-- En caso de que no existan tareas muestra el boton para agregar la tarea directamente -->
+                        <br><button  type="submit" class="btn btn-primary">Agregar tarea</button>
 
+                        <%
+                            }
+                        %>
                         <div id="radioButtonsContainer" style="display: none;">
                             <!-- Radio buttons para elegir la posición de la tarea -->
 
                             <div class="form-check" style="margin-bottom: 10px">
-                                <input type="radio" name="posicion" id="inicio" value="inicio" class="form-check-input" required>
+                                <input type="radio" name="posicion" id="inicio" value="inicio" class="form-check-input" checked>
                                 <label for="inicio" class="form-check-label">Al inicio</label>
                             </div>
 
                             <div class="form-check d-flex" style="max-width: 500px;">
-                                <input type="radio" name="posicion" id="antes" value="antes" class="form-check-input" required>
+                                <input type="radio" name="posicion" id="antes" value="antes" class="form-check-input" >
                                 <label for="antes" class="form-check-label" style="margin-right: 42px; white-space: nowrap;"> Anterior a una tarea</label>
 
                                 <!-- Input para ID Anterior (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior" required pattern="[0-9]+">
+                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior" required>
                                 </div>
                             </div>
 
                             <div class="form-check d-flex" style="max-width: 500px;">
-                                <input type="radio" name="posicion" id="despues" value="despues" class="form-check-input" required>
+                                <input type="radio" name="posicion" id="despues" value="despues" class="form-check-input" >
                                 <label for="despues" class="form-check-label" style="margin-right: 30px; white-space: nowrap;"> Después de una tarea</label>
 
                                 <!-- Input para ID Siguiente (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente" required pattern="[0-9]+">
+                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente" required>
                                 </div>
                             </div>
 
                             <div class="form-check">
-                                <input type="radio" name="posicion" id="final" value="final" class="form-check-input" required>
+                                <input type="radio" name="posicion" id="final" value="final" class="form-check-input" >
                                 <label for="final" class="form-check-label">Al final</label>
                             </div>
-                            <center><button id="agregarTareaFinalBtn" type="submit" class="btn btn-success" style="display: none; margin-top: 15px;">Agregar Tarea</button></center>
+                            <center><button id="agregarTareaFinalBtn" type="submit" class="btn btn-primary" style="display: none; margin-top: 15px;">Agregar Tarea</button></center>
                         </div>
-                    </form>
+                    </form> <!-- Cierre de la etiqueta form -->
                 </div> <!-- Cierre de la clase card card-body -->
             </div> <!-- Cierre de la clase col-lg-4 col-md-4 -->
 
             <!---------------------------------------- Verificación de ID -------------------------------------------->
             <%
-
                 String idVerificado = request.getParameter("idVerificado");
                 if (idVerificado != null && idVerificado.equals("false")) {
             %>
@@ -195,22 +214,14 @@
                         <tbody>  
                             <%
                                 String inputId = request.getParameter("buscar");  // Obtén el ID de búsqueda
-                                ListasEnlazadas listaEnlazada = new ListasEnlazadas();
-                                ServletContext context = getServletContext();
-
-                                listaEnlazada = Archivos.leerArchivoTareas(context);
-
-                                if (listaEnlazada == null) {
-                                    listaEnlazada = new ListasEnlazadas();
-                                }
 
                                 String tablaTareas = "";
 
                                 if (inputId != null && !inputId.isEmpty()) {
-                                    // Si se proporciona un ID, genera una tabla de tareas filtrada por ese ID
-                                    tablaTareas = listaEnlazada.generarTablaBusqueda(inputId);
+                                    // Mustra la tabla con la tarea del ID buscado
+                                    tablaTareas = listaEnlazada.tablaBusqueda(inputId);
                                 } else {
-                                    // Si no se proporciona un ID, genera la tabla de todas las tareas
+                                    // Muestra la tabla de tareas completa
                                     tablaTareas = listaEnlazada.MostrarLista();
                                 }
                                 out.println(tablaTareas);  // Imprime la tabla de tareas

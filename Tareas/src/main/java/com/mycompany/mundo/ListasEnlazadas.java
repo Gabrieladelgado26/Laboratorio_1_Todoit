@@ -145,42 +145,72 @@ public class ListasEnlazadas implements Serializable {
         Tarea tarea = this.cabezera;
         String resultado = "";
 
-        // Iterar sobre la lista de tareas y construir una representación HTML de las tareas
-        while (tarea != null) {
+        if (tarea != null) {
+            // Iterar sobre la lista de tareas y construir una representación HTML de las tareas
+            while (tarea != null) {
+                resultado += "<tr>";
+                resultado += "<td>" + tarea.getId() + "</td>";
+                resultado += "<td>" + tarea.getTitulo() + "</td>";
+                resultado += "<td>" + tarea.getDescripcion() + "</td>";
+                resultado += "<td>" + tarea.getFecha() + "</td>";
+                resultado += "<td> <a href=\"#\" type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-marker\"></i></a>";
+                resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
+                resultado += "</tr>";
+                tarea = tarea.siguiente;
+            }
+        } else if (tarea == null) {
             resultado += "<tr>";
-            resultado += "<td>" + tarea.getId() + "</td>";
-            resultado += "<td>" + tarea.getTitulo() + "</td>";
-            resultado += "<td>" + tarea.getDescripcion() + "</td>";
-            resultado += "<td>" + tarea.getFecha() + "</td>";
-            resultado += "<td> <a href=\"#\" type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-marker\"></i></a>";
-            resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
-            resultado += "</tr>";
-            tarea = tarea.siguiente;
+            // colspan="6" Sirve para ocupar todas las columnas de la tabla de datos
+            resultado += "<td colspan='6' align='center' valign='middle'>No se encontro ninguna tarea registrada</td>";
+            resultado += "<tr>";
         }
         return resultado;
     }
 
-    public String generarTablaBusqueda(String inputId) {
+    /**
+     * Busca una tarea de la lista en base a su ID
+     *
+     * @param idTarea ID de la tarea a buscar
+     */
+    public String tablaBusqueda(String inputId) {
+        // Inicializa la tarea de búsqueda como la cabeza de la lista
         Tarea tarea = this.cabezera;
+        // Inicializa una cadena para almacenar el resultado HTML
         String resultado = "";
+        // Bandera para indicar si se encontró una tarea con el ID especificado
         boolean tareaId = false;
 
+        // Verifica si la lista de tareas, el inputId y no está vacío
         if (tarea != null && inputId != null && !inputId.isEmpty()) {
+            // Recorre la lista de tareas
             while (tarea != null) {
+                // Compara el ID de la tarea con el inputId
                 if (tarea.getId() == Integer.parseInt(inputId)) {
+                    // Agrega información de la tarea al resultado HTML
                     resultado += "<tr>";
                     resultado += "<td>" + tarea.getId() + "</td>";
                     resultado += "<td>" + tarea.getTitulo() + "</td>";
                     resultado += "<td>" + tarea.getDescripcion() + "</td>";
                     resultado += "<td>" + tarea.getFecha() + "</td>";
-                    resultado += "<td> <a href=\"#\" type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-marker\"></i></a>";
+                    // Agrega botones para edición y eliminación
+                    resultado += "<td> <a href=\"#\" type=\"button\" class=\"btn btn-success\" data-bs-toggle=\"modal\" data-bs-target=\"#editModalConfirm\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-pen-clip\"></i></a>";
                     resultado += "<a href=\"#\" type=\"button\" class=\"btn btn-outline-danger\" data-bs-toggle=\"modal\" data-bs-target=\"#eliminar\" data-nombre=\"" + tarea.getId() + "\"><i class=\"fa-solid fa-trash\"></i></a></td>";
                     resultado += "</tr>";
+                    // Marca que se encontró la tarea
                     tareaId = true;
                 }
                 tarea = tarea.siguiente;
             }
         }
+
+        // Si no se encontró la tarea, agrega un mensaje al resultado
+        if (!tareaId) {
+            resultado += "<tr>";
+            // colspan="6" sirve para ocupar todas las columnas de la tabla de datos
+            resultado += "<td colspan='6' align='center' valign='middle'>No se encontró ninguna tarea con el ID ingresado</td>";
+            resultado += "<tr>";
+        }
+        // Devuelve el resultado HTML
         return resultado;
     }
 
@@ -216,15 +246,28 @@ public class ListasEnlazadas implements Serializable {
         }
     }
 
+    /**
+     * Edita una tarea en la lista en base a su ID, actualizando sus atributos
+     * si se proporcionan nuevos valores.
+     *
+     * @param id ID de la tarea a editar
+     * @param nuevoTitulo Nuevo título para la tarea (dejar vacío para no
+     * modificar)
+     * @param nuevaDescripcion Nueva descripción para la tarea (dejar vacío para
+     * no modificar)
+     * @param nuevaFecha Nueva fecha para la tarea (dejar vacío para no
+     * modificar)
+     */
     public void EditarTarea(int id, String nuevoTitulo, String nuevaDescripcion, String nuevaFecha) {
-
-        System.out.println("Corriendo metodo editar");
+        System.out.println("Corriendo método editar"); // Imprime un mensaje para la depuración
 
         Tarea actual = cabezera;
 
+        // Itera a través de la lista de tareas
         while (actual != null) {
 
             if (actual.getId() == id) {
+                // Si encuentra una tarea con el ID especificado, verifica si se proporcionan nuevos valores y los actualiza
 
                 if (!nuevoTitulo.equals("")) {
                     actual.setTitulo(nuevoTitulo);
@@ -240,5 +283,19 @@ public class ListasEnlazadas implements Serializable {
             }
             actual = actual.siguiente;
         }
+    }
+
+    /**
+     * Verifica si la lista de tareas no está vacía.
+     *
+     * @return true si la lista no está vacía, de lo contrario, false
+     */
+    public boolean verificar() {
+        Tarea actual = cabezera;
+        // En caso de que el primer elemento de la lista no sea nulo, se devuelve true
+        if (actual != null) {
+            return true;
+        }
+        return false; // Retorna false si nunca entró en el condicional, es decir, la lista está vacía
     }
 }

@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author INES CHAR
+ * @author Karoll Gabriela Delgado - Leidy Tatiana Cuasquer
  */
-@WebServlet(name = "SvBuscarOrdenar", urlPatterns = {"/SvBuscarOrdenar"})
-public class SvBuscarOrdenar extends HttpServlet {
+@WebServlet(name = "SvBuscar", urlPatterns = {"/SvBuscar"})
+public class SvBuscar extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,14 +34,13 @@ public class SvBuscarOrdenar extends HttpServlet {
             throws ServletException, IOException {
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Este método se llama cuando se recibe una solicitud POST de un usuario para buscar una tarea
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param request El objeto HttpServletRequest que contiene la solicitud HTTP
+     * @param response El objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP
+     * @throws ServletException Excepción que se lanza si hay un error en el servlet
+     * @throws IOException Excepción que se lanza si hay un error de entrada o de salida
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,7 +57,7 @@ public class SvBuscarOrdenar extends HttpServlet {
             // Leer la lista de tareas desde el contexto del servlet
             listaEnlazada = Archivos.leerArchivoTareas(context);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SvBuscarOrdenar.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SvBuscar.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (listaEnlazada == null) {
@@ -73,7 +72,7 @@ public class SvBuscarOrdenar extends HttpServlet {
         
         if (inputId != null && !inputId.isEmpty()) {
             // Si se proporciona un ID, generar una tabla de tareas filtrada por ese ID
-            tablaTareas = listaEnlazada.generarTablaBusqueda(inputId);
+            tablaTareas = listaEnlazada.tablaBusqueda(inputId);
         } else {
             // Si no se proporciona un ID, generar la tabla de todas las tareas
             tablaTareas = listaEnlazada.MostrarLista();

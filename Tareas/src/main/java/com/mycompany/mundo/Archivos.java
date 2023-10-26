@@ -1,6 +1,7 @@
 package com.mycompany.mundo;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -66,7 +67,7 @@ public class Archivos {
 
     public static void escribirArchivoTareas(ListasEnlazadas listaEnlazada, ServletContext context) throws FileNotFoundException {
         // Ruta relativa y absoluta del archivo de datos serializados
-        String rutaRelativa = "/data/tareas.txt";
+        String rutaRelativa = "/data/tareas.ser";
         String rutaAbsoluta = context.getRealPath(rutaRelativa);
         File archivo = new File(rutaAbsoluta);
 
@@ -78,20 +79,27 @@ public class Archivos {
     }
 
     public static ListasEnlazadas leerArchivoTareas(ServletContext context) throws FileNotFoundException, ClassNotFoundException {
-        // Implementación del método para leer el archivo y deserializar la lista enlazada
-        ListasEnlazadas listaEnlazada = null;
+        ListasEnlazadas listaTareas = null;
         // Ruta relativa y absoluta del archivo de datos serializados
-        String rutaRelativa = "/data/tareas.txt";
+        String rutaRelativa = "/data/tareas.ser";
         String rutaAbsoluta = context.getRealPath(rutaRelativa);
         File archivo = new File(rutaAbsoluta);
 
-        try (FileInputStream fis = new FileInputStream(archivo); ObjectInputStream ois = new ObjectInputStream(fis)) {
-            listaEnlazada = (ListasEnlazadas) ois.readObject();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        if (archivo.exists() && archivo.isFile()) {
+            try (FileInputStream fis = new FileInputStream(archivo); ObjectInputStream ois = new ObjectInputStream(fis)) {
+                // Leer y deserializar la lista enlazada desde el archivo
+                listaTareas = (ListasEnlazadas) ois.readObject();
+            } catch (EOFException e) {
+                // EOFException indica que el archivo estaba vacío
+                System.out.println("El archivo de datos está vacío.");
+            } catch (IOException e) {
+                System.out.println("Error al leer el archivo de datos.");
+            }
+        } else {
+            System.out.println("El archivo de datos no existe.");
         }
 
-        return listaEnlazada;
+        return listaTareas;
     }
 
 }

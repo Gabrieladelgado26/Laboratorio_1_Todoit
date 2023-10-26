@@ -1,4 +1,3 @@
-
 package Servlets;
 
 import com.mycompany.mundo.Archivos;
@@ -47,19 +46,19 @@ public class SvEditar extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Este método se llama cuando se recibe una solicitud POST de un usuario para editar una tarea
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @param request El objeto HttpServletRequest que contiene la solicitud HTTP
+     * @param response El objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP
+     * @throws ServletException Excepción que se lanza si hay un error en el servlet
+     * @throws IOException Excepción que se lanza si hay un error de entrada o de salida
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
+        // Imprime un mensaje de depuración indicando que se está ingresando al método doGet
         System.out.println("Entrando en metodo doGet");
 
         // Obtiene el contexto del servlet
@@ -67,49 +66,39 @@ public class SvEditar extends HttpServlet {
 
         // Obtén los parámetros del formulario
         String id = request.getParameter("id");
-        
-        int idTarea = Integer.parseInt(id);
-        
+        int idTarea = Integer.parseInt(id); // Convierte el ID de tarea en un entero
         String nuevoTitulo = request.getParameter("titulo");
-
         String nuevaDescripcion = request.getParameter("descripcion");
-
         String nuevaFecha = request.getParameter("fecha");
-        
+
+        // Imprime los valores obtenidos de los parámetros para depuración
         System.out.println(idTarea);
         System.out.println(nuevoTitulo);
         System.out.println(nuevaDescripcion);
         System.out.println(nuevaFecha);
-        
-        // Crear una instancia de la clase ListasEnlazadas
+
+        // Crea una instancia de la clase ListasEnlazadas
         ListasEnlazadas listaEnlazada = new ListasEnlazadas();
 
         try {
-            // Carga la lista de perros desde un archivo utilizando el contexto del servlet
+            // Carga la lista de tareas desde un archivo utilizando el contexto del servlet
             listaEnlazada = Archivos.leerArchivoTareas(context);
         } catch (ClassNotFoundException ex) {
             // Maneja una excepción en caso de error al leer el archivo
             Logger.getLogger(SvTareas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Llama al método EditarTarea para editar la tarea
+        // Llama al método EditarTarea para editar la tarea en la lista
         listaEnlazada.EditarTarea(idTarea, nuevoTitulo, nuevaDescripcion, nuevaFecha);
 
+        // Escribe la lista actualizada de tareas en un archivo
         Archivos.escribirArchivoTareas(listaEnlazada, context);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
+
     }
 
     /**

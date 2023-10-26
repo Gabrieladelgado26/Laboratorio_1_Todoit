@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ *
+ * @author Karoll Gabriela Delgado - Leidy Tatiana Cuasquer
+ */
 @WebServlet(name = "SvLogin", urlPatterns = {"/SvLogin"})
 public class SvLogin extends HttpServlet {
 
@@ -28,15 +32,6 @@ public class SvLogin extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,17 +39,12 @@ public class SvLogin extends HttpServlet {
     }
 
     /**
-     * Este método se llama cuando se recibe una solicitud POST de un usuario
-     * para iniciar sesión
-     *
+     * Este método se llama cuando se recibe una solicitud POST de un usuario para iniciar sesión
      * @param request El objeto HttpServletRequest que contiene la solicitud
      * HTTP
-     * @param response El objeto HttpServletResponse que se utilizará para
-     * enviar la respuesta HTTP
-     * @throws ServletException Excepción que se lanza si hay un error en el
-     * servlet
-     * @throws IOException Excepción que se lanza si hay un error de entrada o
-     * de salida
+     * @param response El objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP
+     * @throws ServletException Excepción que se lanza si hay un error en el servlet
+     * @throws IOException Excepción que se lanza si hay un error de entrada o de salida
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -90,18 +80,34 @@ public class SvLogin extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    /**
+     * Verifica si un usuario con la cédula y contraseña proporcionadas existe
+     * en una lista de usuarios almacenada en un archivo.
+     *
+     * @param cedulaVerificada La cédula del usuario a verificar.
+     * @param contraseñaVerificada La contraseña del usuario a verificar.
+     * @param context El contexto del servlet para acceder al archivo de usuarios.
+     * @return El nombre del usuario si se encuentra, o null si no se encuentra.
+     * @throws IOException En caso de errores al leer el archivo.
+     */
     public static String verificarUsuario(int cedulaVerificada, String contraseñaVerificada, ServletContext context) throws IOException {
+        // Crea una lista para almacenar los usuarios
         ArrayList<Usuario> misUsuarios = new ArrayList<>();
 
+        // Lee el archivo de usuarios y carga los datos en la lista
         Archivos.leerArchivo(misUsuarios, context);
 
+        // Itera a través de la lista de usuarios
         for (Usuario usuario : misUsuarios) {
-            if (usuario.getCedula() == cedulaVerificada && 
-                usuario.getContrasenia().equals(contraseñaVerificada)) {
+            // Comprueba si el usuario tiene la misma cédula y contraseña proporcionadas
+            if (usuario.getCedula() == cedulaVerificada
+                    && usuario.getContrasenia().equals(contraseñaVerificada)) {
+                // Si se encuentra el usuario, devuelve su nombre
                 return usuario.getNombre();
             }
         }
+
+        // Si no se encuentra el usuario, retorna null
         return null;
     }
-
 }

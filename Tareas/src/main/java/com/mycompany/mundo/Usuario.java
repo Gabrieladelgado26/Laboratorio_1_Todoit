@@ -2,7 +2,7 @@
 package com.mycompany.mundo;
 
 public class Usuario {
-    
+
     private int cedula;
     private String nombre;
     private String contrasenia;
@@ -10,7 +10,7 @@ public class Usuario {
     // constructor vacio 
     public Usuario() {
     }
- 
+
     // constructor con parametros 
     public Usuario(int cedula, String nombre, String contrasenia) {
         this.cedula = cedula;
@@ -18,6 +18,7 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
+    // Getters and Setters
     public int getCedula() {
         return cedula;
     }
@@ -41,5 +42,4 @@ public class Usuario {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
-    
 }

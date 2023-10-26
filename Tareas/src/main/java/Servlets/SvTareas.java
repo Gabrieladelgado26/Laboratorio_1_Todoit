@@ -2,7 +2,6 @@ package Servlets;
 
 import com.mycompany.mundo.Archivos;
 import com.mycompany.mundo.ListasEnlazadas;
-import com.mycompany.mundo.Tarea;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -13,8 +12,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+/**
+ *
+ * @author Karoll Gabriela Delgado - Leidy Tatiana Cuasquer
+ */
 @WebServlet(name = "SvTareas", urlPatterns = {"/SvTareas"})
 public class SvTareas extends HttpServlet {
 
@@ -37,13 +39,14 @@ public class SvTareas extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        //Obtener el contexto del servlet
+        
+        // Obtener el contexto del servlet
         ServletContext context = getServletContext();
 
+        // Obtener el nombre de usuario desde los parámetros de la solicitud
         String nombreUsuario = request.getParameter("usuarioNombre");
 
-        System.out.println("Corriendo metodo de eliminar");
+        System.out.println("Corriendo método de eliminar"); // Imprime un mensaje de depuración
 
         try {
             listaEnlazada = Archivos.leerArchivoTareas(context);
@@ -51,7 +54,7 @@ public class SvTareas extends HttpServlet {
             Logger.getLogger(SvTareas.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Obtiene el titulo de la tarea a eliminar desde los parámetros de la solicitud
+        // Obtener el ID de la tarea a eliminar desde los parámetros de la solicitud
         String idEliminar = request.getParameter("id");
 
         System.out.println("Valor de idEliminar: " + idEliminar);
@@ -66,16 +69,14 @@ public class SvTareas extends HttpServlet {
 
         // Redireccionar a la página de destino (login.jsp)
         response.sendRedirect("login.jsp?usuarioNombre=" + nombreUsuario + "&idVerificado=" + idVerificado);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, FileNotFoundException {
-
         String nombreUsuario = request.getParameter("usuarioNombre");
 
-        // Obtiene el contexto del servlet
+        // Obtener el contexto del servlet
         ServletContext context = getServletContext();
 
         try {
@@ -87,7 +88,7 @@ public class SvTareas extends HttpServlet {
             Logger.getLogger(SvLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Obtiene los datos del formulario enviados por POST
+        // Obtener los datos del formulario enviados por POST
         String posicion = request.getParameter("posicion");
         String id = request.getParameter("id");
         String titulo = request.getParameter("titulo");
@@ -98,7 +99,9 @@ public class SvTareas extends HttpServlet {
         // Verificar si el ID ya existe en la lista
         if (!listaEnlazada.idExistente(Integer.parseInt(id))) {
             // Si el ID no existe, agrega la tarea a la lista
-
+            if (posicion == null) {
+                posicion = "inicio";
+            }
             if ("inicio".equals(posicion)) {
                 listaEnlazada.agregarNodoInicio(Integer.parseInt(id), titulo, descripcion, fecha);
                 idVerificado = "true";
@@ -108,7 +111,7 @@ public class SvTareas extends HttpServlet {
 
                 // Verificar si el ID de referencia existe antes de agregar la tarea
                 if (!listaEnlazada.idExistente(Integer.parseInt(idAnterior))) {
-                    // Maneja el caso en que el ID de referencia no existe
+                    // Maneja el caso en el que el ID de referencia no existe
                     idVerificado = "error";
                 } else {
                     // Verificar si idAnterior no es nulo ni está vacío antes de analizarlo como un entero

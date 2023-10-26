@@ -1,8 +1,8 @@
 Servlets\SvTareas.class
 com\mycompany\mundo\Archivos.class
-Servlets\SvBuscarOrdenar.class
 com\mycompany\mundo\ListasEnlazadas.class
 com\mycompany\mundo\resources\JavaEE8Resource.class
+Servlets\SvBuscar.class
 com\mycompany\mundo\JAXRSConfiguration.class
 com\mycompany\mundo\Tarea.class
 com\mycompany\mundo\Usuario.class
