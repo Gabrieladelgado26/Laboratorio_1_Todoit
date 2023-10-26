@@ -61,7 +61,7 @@
                         </ul>
                         <form action="SvBuscar" method="GET" class="d-flex">
                             <input type="text" name="usuarioNombre" class="form-control" value="<%=nombreUsuario%>" hidden>
-                            <input class="form-control me-2" type="number" type="search" name="inputId" placeholder="ID de la tarea" aria-label="Search">
+                            <input class="form-control me-2" type="number" type="search" name="inputId" placeholder="ID de la tarea" aria-label="Search" max="999999999" min="0" oninput="this.value = this.value.slice(0, 9)" required>
                             <button class="btn btn-outline-primary" type="submit">Buscar</button>
                         </form>
                     </div>
@@ -104,7 +104,7 @@
                             <label class="visually-hidden">Id</label>
                             <div class="input-group">
                                 <div class="input-group-text">Id</div>
-                                <input id="id" name="id" type="text" class="form-control" required>
+                                <input id="id" name="id" type="text" class="form-control" required pattern="[0-9]+" title="Por favor, ingrese solo números">
                             </div>
                         </div>
 
@@ -160,7 +160,7 @@
 
                                 <!-- Input para ID Anterior (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idAnterior" name="idAnterior" type="text" class="form-control" disabled placeholder="ID anterior" required>
+                                    <input id="idAnterior" name="idAnterior" type="number" class="form-control" disabled placeholder="ID" max="999" min="0" oninput="this.value = this.value.slice(0, 3)" required>
                                 </div>
                             </div>
 
@@ -170,7 +170,7 @@
 
                                 <!-- Input para ID Siguiente (deshabilitado inicialmente) -->
                                 <div class="input-group" style="max-width: 200px;">
-                                    <input id="idSiguiente" name="idSiguiente" type="text" class="form-control" disabled placeholder="ID siguiente" required>
+                                    <input id="idSiguiente" name="idSiguiente" type="number" class="form-control" disabled placeholder="ID" max="999" min="0" oninput="this.value = this.value.slice(0, 3)" required>
                                 </div>
                             </div>
 
