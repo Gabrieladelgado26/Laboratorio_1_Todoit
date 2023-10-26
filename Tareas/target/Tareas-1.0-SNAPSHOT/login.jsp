@@ -8,6 +8,13 @@
 
 <% String nombreUsuario = request.getParameter("usuarioNombre");%>
 <%
+    String validacion = request.getParameter("idVerificado");
+
+    if (validacion == null) {
+        String nuevoParametro = "nada";
+        response.sendRedirect("login.jsp?idVerificado=" + nuevoParametro + "&usuarioNombre=" + nombreUsuario);
+    }
+    
     // Crear una instancia de la clase ListasEnlazadas
     ListasEnlazadas listaEnlazada = new ListasEnlazadas();
 
@@ -61,7 +68,7 @@
                                 <center>
                                     <img src="./images/fondoLog.jpeg" alt="" width="160px" height="150px" style="display: block; margin: 0 auto;">
                                 </center>
-                                </li>
+                        </li>
                         <li><a style="text-align: center;" class="dropdown-item heading-section"><%out.println(request.getParameter("usuarioNombre"));%></a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a style="text-align: left;" class="dropdown-item left-align" href="index.jsp">Cerrar sesión</a></li>
@@ -225,7 +232,7 @@
                                     tablaTareas = listaEnlazada.MostrarLista();
                                 }
                                 out.println(tablaTareas);  // Imprime la tabla de tareas
-%>
+                            %>
                         </tbody>
                     </table> <!-- Cierre de la etiqueta table-->
                 </div> <!-- Cierre de la clase card card-body -->
